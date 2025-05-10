@@ -1,89 +1,106 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  login,
-  selectUser,
-  selectIsLoading,
-  selectError,
-  clearError,
-  selectIsInitialized,
-} from "@/redux/authSlice";
-import styles from "@/styles/Login.module.css";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginFormData } from "@/schemas/authSchemas";
+import { useSelector } from "react-redux";
+import { selectAuth, login } from "@/store/auth";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
+function Login() {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-  const isLoading = useAppSelector(selectIsLoading);
-  const error = useAppSelector(selectError);
-  const isInitialized = useAppSelector(selectIsInitialized);
+  const { error } = useSelector(selectAuth);
 
-  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
   useEffect(() => {
-    // Eğer kullanıcı zaten giriş yapmışsa ve sistem başlatıldıysa, ana sayfaya yönlendir
-    if (isInitialized && user) {
-      router.push("/");
+    if (error) {
+      setError("root", {
+        type: "manual",
+        message: error,
+      });
     }
-  }, [user, isInitialized, router]);
+  }, [error, setError]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(clearError());
-
-    if (!username || !password) {
-      // Form validasyonu
-      return;
-    }
-
-    dispatch(login({ username, password }));
+  const onSubmit = (data: LoginFormData) => {
+    dispatch(login({ username: data.username, password: data.password }));
   };
 
-  // Sistem başlatılmadıysa veya yükleniyor durumundaysa
-  if (!isInitialized || isLoading) {
-    return <div>Yükleniyor...</div>;
-  }
-
-  // Kullanıcı giriş yapmışsa ve hala bu sayfadaysa
-  if (user) {
-    return <div>Yönlendiriliyor...</div>;
-  }
-
   return (
-    <div className={styles.container}>
-      <div className={styles.loginBox}>
-        <h1>Giriş Yap</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label htmlFor="username">Kullanıcı Adı</label>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-md p-6 md:p-8 bg-white rounded-md shadow-md mx-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
+          Giriş Yap
+        </h1>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+          noValidate
+        >
+          <div>
+            <label htmlFor="username" className="form-label">
+              Kullanıcı Adı
+            </label>
             <input
-              type="text"
               id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Kullanıcı adınızı girin"
+              type="text"
+              className={`form-input ${
+                errors.username ? "border-error focus:ring-error" : ""
+              }`}
+              {...register("username")}
+              disabled={isSubmitting}
             />
+            {errors.username && (
+              <p className="form-error mt-1">{errors.username.message}</p>
+            )}
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="password">Şifre</label>
+          <div>
+            <label htmlFor="password" className="form-label">
+              Şifre
+            </label>
             <input
-              type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Şifrenizi girin"
+              type="password"
+              className={`form-input ${
+                errors.password ? "border-error focus:ring-error" : ""
+              }`}
+              {...register("password")}
+              disabled={isSubmitting}
             />
+            {errors.password && (
+              <p className="form-error mt-1">{errors.password.message}</p>
+            )}
           </div>
-          {error && <p className={styles.error}>{error}</p>}
-          <button type="submit" className={styles.button}>
-            Giriş Yap
+
+          {/* Global form error veya API error */}
+          {errors.root?.message && (
+            <div className="form-error p-3 bg-red-50 rounded-md">
+              {errors.root?.message}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full btn btn-primary py-3"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Giriş Yapılıyor..." : "Giriş Yap"}
           </button>
         </form>
-        <p className={styles.hint}>Kullanıcı adı: admin, Şifre: 12345</p>
       </div>
     </div>
   );
 }
+Login.requireAuth = false;
+
+export default Login;

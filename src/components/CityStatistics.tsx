@@ -1,11 +1,11 @@
-import { CityStatisticsItem } from "@/services/api";
+import { CityStatisticsItem } from "@/models/city-statistics";
 
-interface CityStatisticsProps {
-  statistics: CityStatisticsItem[] | null;
-  cityName: string | null;
+type CityStatisticsProps = {
+  statistics?: CityStatisticsItem[];
+  cityName?: string;
   isLoading: boolean;
-  error: string | null;
-}
+  error?: string;
+};
 
 const CityStatistics: React.FC<CityStatisticsProps> = ({
   statistics,
@@ -15,7 +15,7 @@ const CityStatistics: React.FC<CityStatisticsProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="statistics-container" style={styles.loadingContainer}>
+      <div className="p-6 text-center bg-gray-50 rounded-md mt-4">
         <p>Veriler yükleniyor...</p>
       </div>
     );
@@ -23,7 +23,7 @@ const CityStatistics: React.FC<CityStatisticsProps> = ({
 
   if (error) {
     return (
-      <div className="statistics-container" style={styles.errorContainer}>
+      <div className="p-6 text-center bg-red-50 text-error rounded-md mt-4">
         <p>Hata: {error}</p>
       </div>
     );
@@ -31,7 +31,7 @@ const CityStatistics: React.FC<CityStatisticsProps> = ({
 
   if (!statistics || statistics.length === 0) {
     return (
-      <div className="statistics-container" style={styles.emptyContainer}>
+      <div className="p-6 text-center bg-gray-50 rounded-md mt-4 text-gray-600">
         <p>
           {cityName
             ? `${cityName} ili için veri bulunamadı.`
@@ -79,82 +79,25 @@ const CityStatistics: React.FC<CityStatisticsProps> = ({
   ];
 
   return (
-    <div className="statistics-container" style={styles.container}>
-      <h2 style={styles.title}>{cityName} İli İstatistikleri</h2>
-      <div style={styles.statsGrid}>
+    <div className="p-5 bg-gray-50 rounded-md shadow mt-4">
+      <h2 className="text-xl md:text-2xl font-semibold mb-5 text-center text-gray-800">
+        {cityName} İli İstatistikleri
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {statsData.map((item) => (
-          <div key={item.id} style={styles.statCard}>
-            <h3 style={styles.statName}>{item.name}</h3>
-            <p style={styles.statValue}>{item.value}</p>
+          <div
+            key={item.id}
+            className="bg-white p-4 rounded shadow hover:shadow-md transition-shadow duration-200 cursor-default"
+          >
+            <h3 className="text-sm font-bold mb-2 text-gray-700">
+              {item.name}
+            </h3>
+            <p className="text-lg font-bold text-primary-500">{item.value}</p>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-// Inline styles
-const styles = {
-  container: {
-    padding: "20px",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    marginTop: "20px",
-  },
-  title: {
-    fontSize: "1.5rem",
-    marginBottom: "20px",
-    color: "#333",
-    textAlign: "center" as const,
-  },
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-    gap: "15px",
-  },
-  statCard: {
-    backgroundColor: "white",
-    padding: "15px",
-    borderRadius: "6px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-    transition: "transform 0.2s ease",
-    cursor: "default",
-  },
-  statName: {
-    fontSize: "1rem",
-    fontWeight: "bold" as const,
-    marginBottom: "8px",
-    color: "#444",
-  },
-  statValue: {
-    fontSize: "1.25rem",
-    color: "#0066cc",
-    fontWeight: "bold" as const,
-  },
-  loadingContainer: {
-    padding: "20px",
-    textAlign: "center" as const,
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    marginTop: "20px",
-  },
-  errorContainer: {
-    padding: "20px",
-    textAlign: "center" as const,
-    backgroundColor: "#fff0f0",
-    color: "#cc0000",
-    borderRadius: "8px",
-    marginTop: "20px",
-  },
-  emptyContainer: {
-    padding: "20px",
-    textAlign: "center" as const,
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    marginTop: "20px",
-    color: "#666",
-  },
 };
 
 export default CityStatistics;

@@ -1,14 +1,14 @@
 import { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { turkeyProvinces } from "@/data/turkey-provinces";
+import { turkeyProvinces } from "@/constants/turkey-provinces";
 
-interface TurkeyMapProps {
+type TurkeyMapProps = {
   onCitySelect: (cityPlate: number) => void;
-}
+};
 
 // MapLibre GL için GeoJSON tipini tanımla
-interface GeoJSONFeature {
+type GeoJSONFeature = {
   type: "Feature";
   properties: {
     id: number;
@@ -19,12 +19,12 @@ interface GeoJSONFeature {
     type: "Point";
     coordinates: [number, number];
   };
-}
+};
 
-interface GeoJSONFeatureCollection {
+type GeoJSONFeatureCollection = {
   type: "FeatureCollection";
   features: GeoJSONFeature[];
-}
+};
 
 const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -32,6 +32,32 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
   // Haritanın yüklendiğini izlemek için eklendi
   const [mapLoaded, setMapLoaded] = useState(false);
+  // Resize observer için state
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  // Container boyutlarını izle
+  useEffect(() => {
+    if (!mapContainer.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      if (entries.length > 0) {
+        const { width, height } = entries[0].contentRect;
+        setContainerWidth(width);
+        setContainerHeight(height);
+
+        // Harita yüklenmişse resize et
+        if (map.current && mapLoaded) {
+          map.current.resize();
+        }
+      }
+    });
+
+    observer.observe(mapContainer.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [mapLoaded]);
 
   // Haritayı yükle
   useEffect(() => {
@@ -86,11 +112,11 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
           })),
         };
 
-        // @ts-expect-error - maplibregl tiplemesi ile ilgili sorunları görmezden gel
+        // Types for maplibre GeoJSON sources are not fully compatible
         map.current.addSource("cities", {
           type: "geojson",
           data: geojsonData,
-        });
+        } as maplibregl.GeoJSONSourceSpecification);
 
         // Şehir noktalarını ekle
         map.current.addLayer({
@@ -180,21 +206,38 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
     ]);
   }, [selectedCity, mapLoaded]);
 
+  // Handle container size changes
+  useEffect(() => {
+    if (containerWidth > 0 && containerHeight > 0 && map.current && mapLoaded) {
+      map.current.resize();
+
+      // Adjust zoom based on container size
+      if (containerWidth < 640) {
+        // Mobile view
+        map.current.setZoom(4.8);
+      } else {
+        map.current.setZoom(5.5);
+      }
+    }
+  }, [containerWidth, containerHeight, mapLoaded]);
+
   return (
-    <div>
+    <div className="h-full">
       <div
         ref={mapContainer}
-        style={{ width: "100%", height: "500px", borderRadius: "8px" }}
+        className="w-full h-full rounded-md overflow-hidden"
       />
       {selectedCity && (
-        <div style={{ marginTop: "10px", textAlign: "center" }}>
-          <p>
+        <div className="mt-3 text-center">
+          <p className="text-sm md:text-base">
             Seçili İl:{" "}
-            {
-              turkeyProvinces.features.find(
-                (f) => f.properties.plate === selectedCity
-              )?.properties.name
-            }
+            <span className="font-semibold text-primary-600">
+              {
+                turkeyProvinces.features.find(
+                  (f) => f.properties.plate === selectedCity
+                )?.properties.name
+              }
+            </span>
           </p>
         </div>
       )}

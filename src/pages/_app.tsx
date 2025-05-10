@@ -1,25 +1,42 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
-import { useEffect } from "react";
-import { initializeAuth } from "@/redux/authSlice";
+import { PersistGate } from "redux-persist/integration/react";
+import dynamic from "next/dynamic";
+import store, { persistor } from "@/store";
 
-// Auth başlatma bileşeni
-function AuthInitializer({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    store.dispatch(initializeAuth());
-  }, []);
+// Client-Only bileşenini lazy load et
+const ClientOnly = dynamic(() => import("@/components/ClientOnly"), {
+  ssr: false,
+});
 
-  return <>{children}</>;
-}
+// AuthLayout bileşenini de lazy load et
+const AuthLayout = dynamic(() => import("@/components/layouts/AuthLayout"), {
+  ssr: false,
+});
 
-export default function App({ Component, pageProps }: AppProps) {
+// Sayfa bazlı koruma yapısını belirle
+type CustomAppProps = AppProps & {
+  Component: {
+    requireAuth?: boolean;
+  } & AppProps["Component"];
+};
+
+function App({ Component, pageProps }: CustomAppProps) {
+  // Varsayılan olarak requireAuth true kabul et
+  const requireAuth = Component.requireAuth ?? true;
+
   return (
     <Provider store={store}>
-      <AuthInitializer>
-        <Component {...pageProps} />
-      </AuthInitializer>
+      <PersistGate loading={null} persistor={persistor}>
+        <ClientOnly>
+          <AuthLayout requireAuth={requireAuth}>
+            <Component {...pageProps} />
+          </AuthLayout>
+        </ClientOnly>
+      </PersistGate>
     </Provider>
   );
 }
+
+export default App;
