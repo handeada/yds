@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { ControlWorkerItem } from "@/models/domain/account-application/control-worker.model";
 import { useGetControlWorkerListQuery } from "@/services/account-application";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface ControlWorkerTableProps {

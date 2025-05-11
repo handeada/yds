@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ExperimentMaterialStandardItem } from "@/models";
 import { useGetExperimentMaterialStandardsListQuery } from "@/services/experiment-material-standards";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { createPaginationParams, exportToCSV } from "@/utils";
 
 const ExperimentMaterialStandardsTable: React.FC = () => {

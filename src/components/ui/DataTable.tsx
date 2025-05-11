@@ -23,7 +23,7 @@ import {
   FiChevronDown,
   FiRefreshCw,
 } from "react-icons/fi";
-import { SkeletonTable } from "./ui/Skeleton";
+import { SkeletonTable } from "./Skeleton";
 
 interface DataTableProps<T extends object> {
   data: T[];

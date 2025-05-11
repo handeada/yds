@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useGetLabScopeListQuery } from "@/services/lab-experiment-material-standards";
 import { createColumnHelper } from "@tanstack/react-table";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { LabExperimentMaterialStandardItem } from "@/models/domain/lab-experiment-material-standards";
 
 interface LaboratoryScopeListProps {

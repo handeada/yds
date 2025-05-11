@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import store, { persistor } from "@/store";
 
 // Client-Only bileşenini lazy load et
-const ClientOnly = dynamic(() => import("@/components/ClientOnly"), {
+const ClientOnly = dynamic(() => import("@/components/layouts/ClientOnly"), {
   ssr: false,
 });
 

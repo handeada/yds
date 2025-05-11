@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { SiteSupervisorItem } from "@/models/domain/account-application/site-supervisor.model";
 import { useGetSiteSupervisorListQuery } from "@/services/account-application";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface SiteSupervisorTableProps {

@@ -141,25 +141,6 @@ const TurkeyMap = () => {
         },
       });
 
-      // Şehir isimleri katmanı
-      mapInstance.addLayer({
-        id: "city-labels",
-        type: "symbol",
-        source: "cities",
-        layout: {
-          "text-field": ["get", "name"],
-          "text-font": ["Noto Sans Regular"],
-          "text-offset": [0, 1.5],
-          "text-anchor": "top",
-          "text-size": 12,
-        },
-        paint: {
-          "text-color": "#000000",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 1,
-        },
-      });
-
       // Tıklama olayını ekle
       mapInstance.on("click", "cities-layer", handleCityClick);
 

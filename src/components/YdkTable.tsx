@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useGetYdkListQuery } from "@/services/department";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { YdkItem } from "@/models";
 import { createPaginationParams, exportToCSV } from "@/utils";
 

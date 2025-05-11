@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { AuditorItem } from "@/models";
 import { useGetAuditorListQuery } from "@/services/document-application";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface AuditorTableProps {

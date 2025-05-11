@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { DistributionResponse } from "@/models/distribution.model";
+import { DistributionItem } from "@/models/domain/distribution/distribution.model";
 import { useGetDistributionListQuery } from "@/services/distribution";
-import DataTable from "./DataTable";
+import DataTable from "./ui/DataTable";
 import { exportToCSV } from "@/utils";
 
 interface DistributionTableProps {
@@ -16,13 +16,18 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
   });
 
   const {
-    data: distributionData = [],
+    data: distributionResponse,
     isLoading,
     error,
     refetch,
   } = useGetDistributionListQuery(cityId || 0, { skip: !cityId });
 
-  const columnHelper = createColumnHelper<DistributionResponse>();
+  // Veriyi daha uygun şekilde hazırla
+  const distributionData = useMemo(() => {
+    return distributionResponse?.items || [];
+  }, [distributionResponse]);
+
+  const columnHelper = createColumnHelper<DistributionItem>();
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -91,7 +96,7 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
       distributionData,
       headers,
       `DENETÇİ_LİSTESİ_${cityId}`,
-      (item: DistributionResponse) => [
+      (item: DistributionItem) => [
         formatDate(item.dagitim_tarihi),
         item.havuzgrup.toString(),
         item.yibfid.toString(),
