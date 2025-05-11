@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
-import { useGetCityStatisticsQuery } from "@/services/city-statistics";
-import { turkeyProvinces } from "@/constants/turkey-provinces";
-import CityStatistics from "./CityStatistics";
+import CityStatisticsSidebar from "./CityStatisticsSidebar";
+import { clearSelection } from "@/store/map";
 
 // Import TurkeyMap component dynamically
 const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
@@ -14,32 +14,16 @@ const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
   ),
 });
 
-const MapLayout: React.FC = () => {
-  // State for selected city
-  const [selectedCityPlate, setSelectedCityPlate] = useState<number | null>(
-    null
-  );
-  const [selectedCityName, setSelectedCityName] = useState<string | null>(null);
+const MapLayout = () => {
+  const dispatch = useDispatch();
 
-  // Fetch statistics for the selected city
-  const {
-    data: statistics,
-    isLoading: statsLoading,
-    error: statsError,
-  } = useGetCityStatisticsQuery(selectedCityPlate || 0, {
-    skip: !selectedCityPlate,
-  });
-
-  // City selection handler
-  const handleCitySelect = useCallback((plateNo: number) => {
-    // Find the city name
-    const cityName =
-      turkeyProvinces.features.find((f) => f.properties.plate === plateNo)
-        ?.properties.name || null;
-
-    setSelectedCityPlate(plateNo);
-    setSelectedCityName(cityName);
-  }, []);
+  // Component unmount olduğunda state'i temizle
+  useEffect(() => {
+    // Cleanup function
+    return () => {
+      dispatch(clearSelection());
+    };
+  }, [dispatch]);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -52,19 +36,12 @@ const MapLayout: React.FC = () => {
         </div>
 
         {/* Map component */}
-        <div className="h-[500px] mb-6">
-          <TurkeyMap onCitySelect={handleCitySelect} />
+        <div className="h-[500px]">
+          <TurkeyMap />
         </div>
 
-        {/* City Statistics */}
-        <CityStatistics
-          statistics={statistics}
-          cityName={selectedCityName || undefined}
-          isLoading={statsLoading}
-          error={
-            statsError ? "Veriler yüklenirken bir hata oluştu." : undefined
-          }
-        />
+        {/* City Statistics Sidebar - artık Redux ile kontrol ediliyor */}
+        <CityStatisticsSidebar />
       </div>
     </div>
   );

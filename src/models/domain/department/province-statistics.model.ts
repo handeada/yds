@@ -1,4 +1,4 @@
-export interface CityStatisticsItem {
+export interface ProvinceStatistics {
   provinceId: number;
   countTotalYibf: number;
   countTotalConstructionArea: number;
@@ -8,8 +8,8 @@ export interface CityStatisticsItem {
   countTotalCountryConstructionArea: number;
 }
 
-export interface CityStatisticsResponse {
-  items: CityStatisticsItem[];
+export interface ProvinceStatisticsResponse {
+  items: ProvinceStatistics[];
   totalCount: number;
   groupCount: number;
   success: boolean;

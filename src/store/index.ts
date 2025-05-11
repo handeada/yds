@@ -13,15 +13,19 @@ import {
 import storage from "redux-persist/lib/storage";
 
 import { REDUX_KEY } from "@/constants/constants";
-import { CityStatisticsService } from "@/services/city-statistics";
 import authSlice from "./auth";
+import mapSlice from "./map";
+import { Department } from "@/services/department";
+import { DocumentApplication } from "@/services/document-application";
 
 const reducers = {
   auth: authSlice.reducer,
+  map: mapSlice.reducer,
 };
 
 const services = {
-  [CityStatisticsService.reducerPath]: CityStatisticsService.reducer,
+  [Department.reducerPath]: Department.reducer,
+  [DocumentApplication.reducerPath]: DocumentApplication.reducer,
 };
 
 const combinedReducers = combineReducers({
@@ -29,7 +33,7 @@ const combinedReducers = combineReducers({
   ...services,
 });
 
-const middlewares = [CityStatisticsService.middleware];
+const middlewares = [Department.middleware, DocumentApplication.middleware];
 
 const persistedReducer = persistReducer(
   {

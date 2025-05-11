@@ -2,10 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { turkeyProvinces } from "@/constants/turkey-provinces";
-
-type TurkeyMapProps = {
-  onCitySelect: (cityPlate: number) => void;
-};
+import { getSelectedCity, selectCity } from "@/store/map";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
 // MapLibre GL için GeoJSON tipini tanımla
 type GeoJSONFeature = {
@@ -26,10 +25,12 @@ type GeoJSONFeatureCollection = {
   features: GeoJSONFeature[];
 };
 
-const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
+const TurkeyMap = () => {
+  const dispatch = useAppDispatch();
+  const { selectedCityPlate } = useSelector(getSelectedCity);
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
-  const [selectedCity, setSelectedCity] = useState<number | null>(null);
   // Haritanın yüklendiğini izlemek için eklendi
   const [mapLoaded, setMapLoaded] = useState(false);
   // Resize observer için state
@@ -87,7 +88,7 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
           ],
         },
         center: [35.5, 39], // Türkiye'nin merkezi
-        zoom: 5.5,
+        zoom: 2,
       });
 
       map.current.on("load", () => {
@@ -161,11 +162,9 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
 
             if (props && props.plate) {
               const plateNo = props.plate;
-              // Eğer zaten seçili değilse seçili yap
-              if (plateNo !== selectedCity) {
-                setSelectedCity(plateNo);
-                onCitySelect(plateNo);
-              }
+              const cityName = props.name;
+              // Redux üzerinden city seçimini yap
+              dispatch(selectCity({ plate: plateNo, name: cityName }));
             }
           }
         });
@@ -191,7 +190,7 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
         map.current = null;
       }
     };
-  }, []); // onCitySelect'i dependency'den kaldırdık
+  }, [dispatch]);
 
   // Seçili şehri vurgula - harita yüklendikten sonra çalışsın
   useEffect(() => {
@@ -200,11 +199,11 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
     // Seçili şehri vurgula
     map.current.setPaintProperty("cities-layer", "circle-color", [
       "case",
-      ["==", ["get", "plate"], selectedCity],
+      ["==", ["get", "plate"], selectedCityPlate],
       "#ff0000", // seçili şehir rengi
       "#3887be", // normal renk
     ]);
-  }, [selectedCity, mapLoaded]);
+  }, [selectedCityPlate, mapLoaded]);
 
   // Handle container size changes
   useEffect(() => {
@@ -227,14 +226,14 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
         ref={mapContainer}
         className="w-full h-full rounded-md overflow-hidden"
       />
-      {selectedCity && (
+      {selectedCityPlate && (
         <div className="mt-3 text-center">
           <p className="text-sm md:text-base">
             Seçili İl:{" "}
             <span className="font-semibold text-primary-600">
               {
                 turkeyProvinces.features.find(
-                  (f) => f.properties.plate === selectedCity
+                  (f) => f.properties.plate === selectedCityPlate
                 )?.properties.name
               }
             </span>
@@ -244,5 +243,7 @@ const TurkeyMap: React.FC<TurkeyMapProps> = ({ onCitySelect }) => {
     </div>
   );
 };
+
+TurkeyMap.displayName = "TurkeyMap";
 
 export default TurkeyMap;

@@ -1,26 +1,16 @@
-import { CityStatisticsItem } from "@/models/city-statistics";
+import { ProvinceStatistics } from "@/models";
 
 type CityStatisticsProps = {
-  statistics?: CityStatisticsItem[];
+  statistics?: ProvinceStatistics[];
   cityName?: string;
-  isLoading: boolean;
   error?: string;
 };
 
 const CityStatistics: React.FC<CityStatisticsProps> = ({
   statistics,
   cityName,
-  isLoading,
   error,
 }) => {
-  if (isLoading) {
-    return (
-      <div className="p-6 text-center bg-gray-50 rounded-md mt-4">
-        <p>Veriler yükleniyor...</p>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="p-6 text-center bg-red-50 text-error rounded-md mt-4">

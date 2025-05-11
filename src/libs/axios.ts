@@ -24,8 +24,6 @@ if (typeof window !== "undefined") {
 
 export interface ApiResponse<T> {
   data: T;
-  statusCode: number;
-  message?: string;
   success: boolean;
 }
 
