@@ -1,15 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   YKEArchitectEngineerQueryParams,
   YKEArchitectEngineerResponse,
   YKEArchitectEngineerRequest,
 } from "@/models/domain/document-application/yke-architect-engineer.model";
+import axiosBaseQuery from "@/utils/axiosBaseQuery";
 
 export const YKEArchitectEngineerApi = createApi({
   reducerPath: "ykeArchitectEngineerApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://businessyds.csb.gov.tr/api/",
-  }),
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     getYKEArchitectEngineerList: builder.query<
       YKEArchitectEngineerResponse,
@@ -18,7 +17,7 @@ export const YKEArchitectEngineerApi = createApi({
       query: (params) => ({
         url: "accountApplication/findAllPublicYKEArchitectEngineers",
         method: "POST",
-        body: {
+        data: {
           requireTotalCount: true,
           searchOperation: "contains",
           searchValue: params.searchTerm || null,

@@ -1,3 +1,5 @@
+import { BaseItem, BaseResponse } from "@/models/common";
+
 export interface AuditorQueryParams {
   id: number;
   skip?: number;
@@ -23,22 +25,6 @@ export interface AuditorRequest {
   id: number;
 }
 
-export interface AuditorItem {
-  applicationTypeId: number;
-  id: number;
-  locationId: number;
-  occupationalRegistrationNumber: string;
-  personSurName: string;
-  personName: string;
-  taskId: number;
-  taskName: string;
-  titleName: string;
-  working: boolean;
-}
+export type AuditorItem = BaseItem;
 
-export interface AuditorResponse {
-  items: AuditorItem[];
-  totalCount: number;
-  groupCount: number;
-  success: boolean;
-}
+export type AuditorResponse = BaseResponse<AuditorItem>;

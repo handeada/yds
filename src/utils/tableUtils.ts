@@ -1,14 +1,3 @@
-/**
- * Table utility functions for common table operations
- */
-
-/**
- * Generate and download a CSV file from data
- * @param items Data items to export
- * @param headers CSV column headers
- * @param fileName Name of the CSV file (without extension)
- * @param mapFunction Function to map each item to CSV row values
- */
 export const exportToCSV = <T>(
   items: T[],
   headers: string[],
@@ -40,12 +29,6 @@ export const exportToCSV = <T>(
   URL.revokeObjectURL(url);
 };
 
-/**
- * Create pagination parameters for API requests
- * @param pageIndex Current page index
- * @param pageSize Items per page
- * @returns Object with skip and take parameters
- */
 export const createPaginationParams = (
   pageIndex: number,
   pageSize: number

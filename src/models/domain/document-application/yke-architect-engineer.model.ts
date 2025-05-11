@@ -1,3 +1,5 @@
+import { BaseItem, BaseResponse } from "@/models";
+
 export interface YKEArchitectEngineerQueryParams {
   id: number;
   skip?: number;
@@ -23,22 +25,7 @@ export interface YKEArchitectEngineerRequest {
   id: number;
 }
 
-export interface YKEArchitectEngineerItem {
-  applicationTypeId: number;
-  id: number;
-  locationId: number;
-  occupationalRegistrationNumber: string;
-  personSurName: string;
-  personName: string;
-  taskId: number;
-  taskName: string;
-  titleName: string;
-  working: boolean;
-}
+export type YKEArchitectEngineerItem = BaseItem;
 
-export interface YKEArchitectEngineerResponse {
-  items: YKEArchitectEngineerItem[];
-  totalCount: number;
-  groupCount: number;
-  success: boolean;
-}
+export type YKEArchitectEngineerResponse =
+  BaseResponse<YKEArchitectEngineerItem>;

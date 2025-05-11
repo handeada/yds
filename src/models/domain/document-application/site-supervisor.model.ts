@@ -1,3 +1,5 @@
+import { BaseItem, BaseResponse } from "@/models/common";
+
 export interface SiteSupervisorQueryParams {
   id: number;
   skip?: number;
@@ -23,22 +25,6 @@ export interface SiteSupervisorRequest {
   id: number;
 }
 
-export interface SiteSupervisorItem {
-  applicationTypeId: number;
-  id: number;
-  locationId: number;
-  occupationalRegistrationNumber: string;
-  personSurName: string;
-  personName: string;
-  taskId: number;
-  taskName: string;
-  titleName: string;
-  working: boolean;
-}
+export type SiteSupervisorItem = BaseItem;
 
-export interface SiteSupervisorResponse {
-  items: SiteSupervisorItem[];
-  totalCount: number;
-  groupCount: number;
-  success: boolean;
-}
+export type SiteSupervisorResponse = BaseResponse<SiteSupervisorItem>;

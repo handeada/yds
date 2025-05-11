@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import CityStatisticsSidebar from "./CityStatisticsSidebar";
 import { clearSelection } from "@/store/map";
 import { TurkeyMapSkeleton } from "@/components/ui/Skeletons";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
 // Import TurkeyMap component dynamically
 const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
@@ -12,7 +12,7 @@ const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
 });
 
 const MapLayout = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // Component unmount olduğunda state'i temizle
   useEffect(() => {

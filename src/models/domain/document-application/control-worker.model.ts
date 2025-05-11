@@ -1,3 +1,5 @@
+import { BaseItem, BaseResponse } from "@/models";
+
 export interface ControlWorkerQueryParams {
   id: number;
   skip?: number;
@@ -23,22 +25,6 @@ export interface ControlWorkerRequest {
   id: number;
 }
 
-export interface ControlWorkerItem {
-  applicationTypeId: number;
-  id: number;
-  locationId: number;
-  occupationalRegistrationNumber: string;
-  personSurName: string;
-  personName: string;
-  taskId: number;
-  taskName: string;
-  titleName: string;
-  working: boolean;
-}
+export type ControlWorkerItem = BaseItem;
 
-export interface ControlWorkerResponse {
-  items: ControlWorkerItem[];
-  totalCount: number;
-  groupCount: number;
-  success: boolean;
-}
+export type ControlWorkerResponse = BaseResponse<ControlWorkerItem>;

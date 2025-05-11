@@ -1,4 +1,4 @@
-import { ExperimentMaterial, Standards } from "@/models";
+import { BaseResponse, ExperimentMaterial, Standards } from "@/models";
 
 export interface LabExperimentMaterialStandardQueryParams {
   fileNumber: number;
@@ -9,12 +9,8 @@ export interface LabExperimentMaterialStandardQueryParams {
   sortDirection?: boolean;
 }
 
-export interface LabExperimentMaterialStandardResponse {
-  items: LabExperimentMaterialStandardItem[];
-  totalCount: number;
-  groupCount: number;
-  success: boolean;
-}
+export type LabExperimentMaterialStandardResponse =
+  BaseResponse<LabExperimentMaterialStandardItem>;
 
 export interface LabExperimentMaterialStandardItem {
   id: number;
