@@ -66,7 +66,13 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
       columnHelper.accessor("working", {
         header: "Durumu",
         cell: (info) => (
-          <span className={info.getValue() ? "text-green-500" : "text-red-500"}>
+          <span
+            className={
+              info.getValue()
+                ? "bg-[rgb(3,148,135)] text-white px-2 py-1 rounded"
+                : "text-red-500"
+            }
+          >
             {info.getValue() ? "Çalışıyor" : "Çalışmıyor"}
           </span>
         ),

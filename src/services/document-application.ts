@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuditorQueryParams, AuditorResponse, AuditorRequest } from "@/models";
+import { DistributionResponse } from "@/models/distribution.model";
 
 export const DocumentApplication = createApi({
   reducerPath: "auditorApi",
@@ -30,7 +31,11 @@ export const DocumentApplication = createApi({
         } as AuditorRequest,
       }),
     }),
+    getDistributionList: builder.query<DistributionResponse[], number>({
+      query: (cityId) => `distribution/findAllPublic/${cityId}`,
+    }),
   }),
 });
 
-export const { useGetAuditorListQuery } = DocumentApplication;
+export const { useGetAuditorListQuery, useGetDistributionListQuery } =
+  DocumentApplication;

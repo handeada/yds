@@ -141,14 +141,19 @@ const TurkeyMap = () => {
   // Seçili şehri vurgula
   const highlightSelectedCity = useCallback(
     (mapInstance: maplibregl.Map, cityPlate: number | null) => {
-      if (!cityPlate || !mapInstance.isStyleLoaded()) return;
+      if (!mapInstance.isStyleLoaded()) return;
 
-      mapInstance.setPaintProperty("cities-layer", "circle-color", [
-        "case",
-        ["==", ["get", "plate"], cityPlate],
-        "#ff0000", // seçili şehir rengi
-        "#3887be", // normal renk
-      ]);
+      if (cityPlate) {
+        mapInstance.setPaintProperty("cities-layer", "circle-color", [
+          "case",
+          ["==", ["get", "plate"], cityPlate],
+          "#ff0000", // seçili şehir rengi
+          "#3887be", // normal renk
+        ]);
+      } else {
+        // Pop-up kapandığında tüm şehirleri normal renge geri döndür
+        mapInstance.setPaintProperty("cities-layer", "circle-color", "#3887be");
+      }
     },
     []
   );

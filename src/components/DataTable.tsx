@@ -207,7 +207,7 @@ function DataTable<T extends object>({
                 {table.getHeaderGroups()[0].headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-3 py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider"
+                    className="px-3 py-2 text-xs font-semibold text-slate-600 tracking-wider"
                   >
                     <div
                       className="flex items-center space-x-1 cursor-pointer hover:text-slate-800"
