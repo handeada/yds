@@ -15,6 +15,15 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
+import {
+  FiDownload,
+  FiSearch,
+  FiX,
+  FiChevronUp,
+  FiChevronDown,
+  FiRefreshCw,
+} from "react-icons/fi";
+import { SkeletonTable } from "./ui/Skeleton";
 
 interface DataTableProps<T extends object> {
   data: T[];
@@ -103,11 +112,11 @@ function DataTable<T extends object>({
   // Loading state
   if (isLoading) {
     return (
-      <div className="animate-pulse mx-4 py-4">
-        <div className="h-8 bg-gray-200 rounded mb-4"></div>
-        {[...Array(5)].map((_, index) => (
-          <div key={index} className="h-12 bg-gray-200 rounded mb-2"></div>
-        ))}
+      <div className="mx-4 py-4">
+        <SkeletonTable
+          rows={5}
+          columns={columns.length > 3 ? 4 : columns.length}
+        />
       </div>
     );
   }
@@ -124,7 +133,7 @@ function DataTable<T extends object>({
     <div className="mx-4">
       {/* Table Header with Actions */}
       <div className="mb-3 flex flex-wrap items-center justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-start space-x-2">
           <h3 className="text-sm font-medium text-slate-700">Bulunan kayıt</h3>
           {globalFilter || columnFilters.length > 0 ? (
             <div className="flex items-center space-x-1.5">
@@ -142,43 +151,17 @@ function DataTable<T extends object>({
         <div className="flex space-x-2 mt-2 sm:mt-0">
           <button
             onClick={onRefresh}
-            className="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-xs font-medium text-slate-600 flex items-center focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded text-xs font-medium text-slate-600 flex items-center focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
+            <FiRefreshCw className="h-4 w-4 mr-1.5" />
             Yenile
           </button>
           {onExportCSV && (
             <button
               onClick={onExportCSV}
-              className="px-2 py-1 bg-green-50 hover:bg-green-100 text-green-600 rounded text-xs font-medium flex items-center focus:outline-none focus:ring-1 focus:ring-green-500"
+              className="px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 rounded text-xs font-medium flex items-center focus:outline-none focus:ring-1 focus:ring-green-500"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
+              <FiDownload className="h-4 w-4 mr-1.5" />
               {exportButtonLabel}
             </button>
           )}
@@ -189,22 +172,12 @@ function DataTable<T extends object>({
       <div className="mb-3">
         <div className="relative rounded-md shadow-sm">
           <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-            <svg
-              className="h-3 w-3 text-slate-400"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <FiSearch className="h-3 w-3 text-slate-400" aria-hidden="true" />
           </div>
           <input
             type="text"
+            id="table-global-search"
+            name="table-global-search"
             className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-xs border-slate-300 rounded-md py-1.5 border"
             placeholder="Tüm alanlarda ara..."
             value={globalFilter || ""}
@@ -215,19 +188,7 @@ function DataTable<T extends object>({
               className="absolute inset-y-0 right-0 pr-2 flex items-center cursor-pointer"
               onClick={() => setGlobalFilter("")}
             >
-              <svg
-                className="h-3 w-3 text-slate-400 hover:text-slate-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <FiX className="h-3 w-3 text-slate-400 hover:text-slate-500" />
             </div>
           )}
         </div>
@@ -260,38 +221,8 @@ function DataTable<T extends object>({
                       </span>
                       <span>
                         {{
-                          asc: (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-3 w-3"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 15l7-7 7 7"
-                              />
-                            </svg>
-                          ),
-                          desc: (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-3 w-3"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                              />
-                            </svg>
-                          ),
+                          asc: <FiChevronUp className="h-3 w-3" />,
+                          desc: <FiChevronDown className="h-3 w-3" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </span>
                     </div>
@@ -305,6 +236,8 @@ function DataTable<T extends object>({
                     <div className="relative">
                       <input
                         type="text"
+                        id={`column-filter-${header.id}`}
+                        name={`column-filter-${header.id}`}
                         value={
                           (table
                             .getColumn(header.id)
@@ -327,19 +260,7 @@ function DataTable<T extends object>({
                             table.getColumn(header.id)?.setFilterValue("")
                           }
                         >
-                          <svg
-                            className="h-3 w-3 text-slate-400 hover:text-slate-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
+                          <FiX className="h-3 w-3 text-slate-400 hover:text-slate-500" />
                         </div>
                       )}
                     </div>
@@ -384,6 +305,8 @@ function DataTable<T extends object>({
         <div className="flex items-center space-x-2 mb-2 sm:mb-0">
           <span className="text-slate-600">Sayfa başı:</span>
           <select
+            id="page-size-select"
+            name="page-size-select"
             value={pageSize}
             onChange={handlePageSizeChange}
             className="border border-slate-300 rounded py-0.5 px-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"

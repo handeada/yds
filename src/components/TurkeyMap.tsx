@@ -86,6 +86,8 @@ const TurkeyMap = () => {
               maxzoom: 19,
             },
           ],
+          // Mapbox veya başka bir kaynak tarafından sağlanan glyphs (yazı tipi sembolleri)
+          glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
         },
         center: [35.5, 39], // Türkiye'nin merkezi
         zoom: 2,
@@ -139,7 +141,7 @@ const TurkeyMap = () => {
           source: "cities",
           layout: {
             "text-field": ["get", "name"],
-            "text-font": ["Open Sans Regular"],
+            "text-font": ["Noto Sans Regular"],
             "text-offset": [0, 1.5],
             "text-anchor": "top",
             "text-size": 12,

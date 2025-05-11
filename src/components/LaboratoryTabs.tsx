@@ -13,8 +13,8 @@ const LaboratoryTabs: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg text-gray-700 font-medium mb-2">
+      <div className="mb-3">
+        <h3 className="text-base text-gray-700 font-medium mb-2">
           Laboratuvar Verileri
         </h3>
         <div className="bg-gray-50 rounded-md p-2">
@@ -27,7 +27,7 @@ const LaboratoryTabs: React.FC = () => {
                   activeLabTab === value
                     ? "bg-white text-blue-600 font-medium shadow-sm"
                     : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-                } rounded-md py-2 px-4 text-sm transition-colors duration-150 flex-1 mx-1`}
+                } rounded-md py-1.5 px-3 text-xs transition-colors duration-150 flex-1 mx-1`}
               >
                 {title}
               </button>

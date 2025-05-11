@@ -5,6 +5,7 @@ import { loginSchema, LoginFormData } from "@/schemas/authSchemas";
 import { useSelector } from "react-redux";
 import { selectAuth, login } from "@/store/auth";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { FiLogIn } from "react-icons/fi";
 
 function Login() {
   const dispatch = useAppDispatch();
@@ -91,9 +92,10 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full btn btn-primary py-3"
+            className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded py-2 px-4 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isSubmitting}
           >
+            <FiLogIn className="h-4 w-4 mr-2" />
             {isSubmitting ? "Giriş Yapılıyor..." : "Giriş Yap"}
           </button>
         </form>

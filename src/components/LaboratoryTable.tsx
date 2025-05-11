@@ -5,6 +5,7 @@ import { useGetLaboratoryListQuery } from "@/services/department";
 import DataTable from "./DataTable";
 import Modal from "./Modal";
 import LaboratoryScopeList from "./LaboratoryScopeList";
+import { FiClipboard } from "react-icons/fi";
 
 interface LaboratoryTableProps {
   cityId: number | null;
@@ -75,23 +76,11 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
         cell: (info) => (
           <button
             onClick={() => handleOpenScopeList(info.row.original)}
-            className="text-blue-500 hover:text-blue-700"
+            className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded text-xs font-medium flex items-center focus:outline-none focus:ring-1 focus:ring-blue-500"
             title="Kapsam Listesi Görüntüle"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </svg>
+            <FiClipboard className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Görüntüle</span>
           </button>
         ),
       }),
