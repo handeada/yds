@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CityStatistics from "./CityStatistics";
 import YdkTable from "./YdkTable";
 import AuditorTable from "./AuditorTable";
+import LaboratoryTabs from "./LaboratoryTabs";
 import { useGetCityStatisticsQuery } from "@/services/department";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
@@ -140,6 +141,8 @@ const CityStatisticsSidebar: React.FC = () => {
               {activeTab === TAB_TITLES.auditor.value && (
                 <AuditorTable cityId={selectedCityPlate} />
               )}
+
+              {activeTab === TAB_TITLES.laboratory.value && <LaboratoryTabs />}
             </div>
           </motion.div>
         </>

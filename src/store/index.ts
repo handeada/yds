@@ -17,6 +17,8 @@ import authSlice from "./auth";
 import mapSlice from "./map";
 import { Department } from "@/services/department";
 import { DocumentApplication } from "@/services/document-application";
+import { ExperimentMaterialStandards } from "@/services/experiment-material-standards";
+import { LabExperimentMaterialStandards } from "@/services/lab-experiment-material-standards";
 
 const reducers = {
   auth: authSlice.reducer,
@@ -26,6 +28,10 @@ const reducers = {
 const services = {
   [Department.reducerPath]: Department.reducer,
   [DocumentApplication.reducerPath]: DocumentApplication.reducer,
+  [ExperimentMaterialStandards.reducerPath]:
+    ExperimentMaterialStandards.reducer,
+  [LabExperimentMaterialStandards.reducerPath]:
+    LabExperimentMaterialStandards.reducer,
 };
 
 const combinedReducers = combineReducers({
@@ -33,7 +39,12 @@ const combinedReducers = combineReducers({
   ...services,
 });
 
-const middlewares = [Department.middleware, DocumentApplication.middleware];
+const middlewares = [
+  Department.middleware,
+  DocumentApplication.middleware,
+  ExperimentMaterialStandards.middleware,
+  LabExperimentMaterialStandards.middleware,
+];
 
 const persistedReducer = persistReducer(
   {

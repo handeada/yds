@@ -7,6 +7,8 @@ import {
   YdkResponse,
   Filter,
   YdkQueryParams,
+  LaboratoryResponse,
+  LaboratoryQueryParams,
 } from "@/models";
 
 export const Department = createApi({
@@ -39,6 +41,38 @@ export const Department = createApi({
       }),
     }),
 
+    // Laboratory related endpoints
+    getLaboratoryList: builder.query<LaboratoryResponse, LaboratoryQueryParams>(
+      {
+        query: (params) => ({
+          url: "department/findAllLabPublic",
+          method: HttpMethod.Post,
+          data: {
+            requireTotalCount: true,
+            searchOperation: "contains",
+            searchValue: params.searchTerm || null,
+            skip: params.skip || 0,
+            take: params.take || 10,
+            userData: {},
+            sort: params.sortField
+              ? [
+                  {
+                    selector: params.sortField,
+                    desc: params.sortDirection || false,
+                  },
+                ]
+              : [
+                  {
+                    selector: "fileNumber",
+                    desc: false,
+                  },
+                ],
+            filter: ["locationId", "=", params.locationId] as Filter,
+          },
+        }),
+      }
+    ),
+
     // City statistics endpoints
     getCityStatistics: builder.query<ProvinceStatistics[], number>({
       query: (plakaNo) => ({
@@ -54,4 +88,8 @@ export const Department = createApi({
   }),
 });
 
-export const { useGetYdkListQuery, useGetCityStatisticsQuery } = Department;
+export const {
+  useGetYdkListQuery,
+  useGetCityStatisticsQuery,
+  useGetLaboratoryListQuery,
+} = Department;
