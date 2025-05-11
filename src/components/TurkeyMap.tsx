@@ -32,6 +32,7 @@ const TurkeyMap = () => {
 
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
+  const popup = useRef<maplibregl.Popup | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -75,14 +76,44 @@ const TurkeyMap = () => {
     [dispatch]
   );
 
-  // Fare imlecini değiştirme olayları
+  // Fare imlecini değiştirme ve popup gösterme/gizleme olayları
   const setupMouseInteractions = useCallback((mapInstance: maplibregl.Map) => {
-    mapInstance.on("mouseenter", "cities-layer", () => {
-      mapInstance.getCanvas().style.cursor = "pointer";
+    // Popup oluştur
+    popup.current = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 10,
+      className: "map-city-popup",
     });
 
+    // Şehir üzerine gelindiğinde
+    mapInstance.on("mouseenter", "cities-layer", (e) => {
+      // Mouse'un üzerinde olduğu özelliği al
+      if (e.features && e.features.length > 0) {
+        const feature = e.features[0];
+        // MapLibre GeoJSON özelliklerine uygun bir tip dönüşümü yapılıyor
+        const pointGeometry = feature.geometry as {
+          type: string;
+          coordinates: number[];
+        };
+        const coordinates = pointGeometry.coordinates.slice() as [
+          number,
+          number
+        ];
+        const cityName = feature.properties.name;
+
+        // Popup'ı göster
+        popup.current
+          ?.setLngLat(coordinates)
+          .setHTML(`<div class="city-popup">${cityName}</div>`)
+          .addTo(mapInstance);
+      }
+    });
+
+    // Şehir üzerinden ayrıldığında
     mapInstance.on("mouseleave", "cities-layer", () => {
-      mapInstance.getCanvas().style.cursor = "";
+      // Popup'ı kaldır
+      popup.current?.remove();
     });
   }, []);
 
@@ -240,6 +271,30 @@ const TurkeyMap = () => {
         ref={mapContainer}
         className="w-full h-full rounded-md overflow-hidden"
       />
+      <style jsx global>{`
+        .map-city-popup {
+          z-index: 1000;
+        }
+        .city-popup {
+          padding: 4px 8px;
+          background: white;
+          color: black;
+          border-radius: 4px;
+          font-weight: bold;
+          pointer-events: none;
+          white-space: nowrap;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .maplibregl-popup-content {
+          padding: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+        .maplibregl-popup-tip {
+          display: none !important;
+        }
+      `}</style>
       {selectedCityPlate && (
         <div className="mt-3 text-center">
           <p className="text-sm md:text-base">
