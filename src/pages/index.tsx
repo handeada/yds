@@ -2,29 +2,12 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { logout, selectAuth } from "@/store/auth";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
-import { FiLogOut, FiMap } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
+import { MapSkeleton } from "@/components/ui/Skeletons";
 
 const MapLayout = dynamic(() => import("@/components/MapLayout"), {
   ssr: false,
-  loading: () => (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
-      <div className="flex flex-col items-center p-8 bg-white rounded-lg shadow-sm border border-gray-100 max-w-md">
-        <div className="animate-pulse mb-5">
-          <FiMap className="h-16 w-16 text-gray-300" />
-        </div>
-        <div className="text-gray-600 text-lg font-medium mb-6">
-          Türkiye İl İstatistikleri
-        </div>
-        <div className="text-gray-500 mb-6">Harita yükleniyor...</div>
-        <div className="w-full space-y-3">
-          <div className="h-5 bg-gray-200 rounded w-full"></div>
-          <div className="h-5 bg-gray-200 rounded w-5/6 mx-auto"></div>
-          <div className="h-5 bg-gray-200 rounded w-4/5 mx-auto"></div>
-        </div>
-        <div className="mt-8 h-10 bg-blue-100 rounded-full w-40 mx-auto"></div>
-      </div>
-    </div>
-  ),
+  loading: () => <MapSkeleton />,
 });
 
 export default function Home() {

@@ -1,7 +1,8 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { turkeyProvinces } from "@/constants/turkey-provinces";
+import { MAP_CONFIG } from "@/constants/map-config";
 import { getSelectedCity, selectCity } from "@/store/map";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
@@ -31,11 +32,126 @@ const TurkeyMap = () => {
 
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
-  // Haritanın yüklendiğini izlemek için eklendi
   const [mapLoaded, setMapLoaded] = useState(false);
-  // Resize observer için state
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
+
+  // GeoJSON verilerini oluştur
+  const createGeoJSONData = useCallback((): GeoJSONFeatureCollection => {
+    return {
+      type: "FeatureCollection",
+      features: turkeyProvinces.features.map((feature) => ({
+        type: "Feature",
+        properties: {
+          id: feature.properties.id,
+          name: feature.properties.name,
+          plate: feature.properties.plate,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: feature.geometry.coordinates as [number, number],
+        },
+      })),
+    };
+  }, []);
+
+  // Şehir tıklama olayını işle
+  const handleCityClick = useCallback(
+    (
+      e: maplibregl.MapMouseEvent & {
+        features?: maplibregl.MapGeoJSONFeature[];
+      }
+    ) => {
+      if (e.features && e.features.length > 0) {
+        e.preventDefault();
+        const feature = e.features[0];
+        const props = feature.properties;
+
+        if (props && props.plate) {
+          dispatch(selectCity({ plate: props.plate, name: props.name }));
+        }
+      }
+    },
+    [dispatch]
+  );
+
+  // Fare imlecini değiştirme olayları
+  const setupMouseInteractions = useCallback((mapInstance: maplibregl.Map) => {
+    mapInstance.on("mouseenter", "cities-layer", () => {
+      mapInstance.getCanvas().style.cursor = "pointer";
+    });
+
+    mapInstance.on("mouseleave", "cities-layer", () => {
+      mapInstance.getCanvas().style.cursor = "";
+    });
+  }, []);
+
+  // Harita katmanlarını oluştur
+  const setupMapLayers = useCallback(
+    (mapInstance: maplibregl.Map) => {
+      const geojsonData = createGeoJSONData();
+
+      // Veri kaynağını ekle
+      mapInstance.addSource("cities", {
+        type: "geojson",
+        data: geojsonData,
+      } as maplibregl.GeoJSONSourceSpecification);
+
+      // Şehir noktaları katmanı
+      mapInstance.addLayer({
+        id: "cities-layer",
+        type: "circle",
+        source: "cities",
+        paint: {
+          "circle-radius": 8,
+          "circle-color": "#3887be",
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
+        },
+      });
+
+      // Şehir isimleri katmanı
+      mapInstance.addLayer({
+        id: "city-labels",
+        type: "symbol",
+        source: "cities",
+        layout: {
+          "text-field": ["get", "name"],
+          "text-font": ["Noto Sans Regular"],
+          "text-offset": [0, 1.5],
+          "text-anchor": "top",
+          "text-size": 12,
+        },
+        paint: {
+          "text-color": "#000000",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 1,
+        },
+      });
+
+      // Tıklama olayını ekle
+      mapInstance.on("click", "cities-layer", handleCityClick);
+
+      // Fare etkileşimlerini ekle
+      setupMouseInteractions(mapInstance);
+    },
+    [createGeoJSONData, handleCityClick, setupMouseInteractions]
+  );
+
+  // Seçili şehri vurgula
+  const highlightSelectedCity = useCallback(
+    (mapInstance: maplibregl.Map, cityPlate: number | null) => {
+      if (!cityPlate || !mapInstance.isStyleLoaded()) return;
+
+      mapInstance.setPaintProperty("cities-layer", "circle-color", [
+        "case",
+        ["==", ["get", "plate"], cityPlate],
+        "#ff0000", // seçili şehir rengi
+        "#3887be", // normal renk
+      ]);
+    },
+    []
+  );
 
   // Container boyutlarını izle
   useEffect(() => {
@@ -46,181 +162,72 @@ const TurkeyMap = () => {
         const { width, height } = entries[0].contentRect;
         setContainerWidth(width);
         setContainerHeight(height);
-
-        // Harita yüklenmişse resize et
-        if (map.current && mapLoaded) {
-          map.current.resize();
-        }
       }
     });
 
     observer.observe(mapContainer.current);
-    return () => {
-      observer.disconnect();
-    };
-  }, [mapLoaded]);
+    return () => observer.disconnect();
+  }, []);
 
-  // Haritayı yükle
+  // Haritayı başlat
   useEffect(() => {
-    if (map.current) return; // harita zaten başlatılmışsa, tekrar başlatma
+    // Harita zaten başlatılmışsa, tekrar başlatma
+    if (map.current) return;
 
-    if (mapContainer.current) {
-      map.current = new maplibregl.Map({
-        container: mapContainer.current,
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: "raster",
-              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-              tileSize: 256,
-              attribution: "&copy; OpenStreetMap Contributors",
-            },
-          },
-          layers: [
-            {
-              id: "osm",
-              type: "raster",
-              source: "osm",
-              minzoom: 0,
-              maxzoom: 19,
-            },
-          ],
-          // Mapbox veya başka bir kaynak tarafından sağlanan glyphs (yazı tipi sembolleri)
-          glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-        },
-        center: [35.5, 39], // Türkiye'nin merkezi
-        zoom: 2,
-      });
+    // Harita konteynerı yoksa, oluşturma
+    if (!mapContainer.current) return;
 
-      map.current.on("load", () => {
-        if (!map.current) return;
+    // Haritayı oluştur
+    const mapInstance = new maplibregl.Map({
+      container: mapContainer.current,
+      style: MAP_CONFIG.style as maplibregl.StyleSpecification,
+      center: MAP_CONFIG.center,
+      zoom: MAP_CONFIG.zoom,
+    });
 
-        setMapLoaded(true);
+    // Harita referansını kaydet
+    map.current = mapInstance;
 
-        // GeoJSON verisini ekle
-        const geojsonData: GeoJSONFeatureCollection = {
-          type: "FeatureCollection",
-          features: turkeyProvinces.features.map((feature) => ({
-            type: "Feature",
-            properties: {
-              id: feature.properties.id,
-              name: feature.properties.name,
-              plate: feature.properties.plate,
-            },
-            geometry: {
-              type: "Point",
-              coordinates: feature.geometry.coordinates as [number, number],
-            },
-          })),
-        };
+    // Harita yüklendiğinde katmanları ekle
+    mapInstance.on("load", () => {
+      setMapLoaded(true);
+      setupMapLayers(mapInstance);
+    });
 
-        // Types for maplibre GeoJSON sources are not fully compatible
-        map.current.addSource("cities", {
-          type: "geojson",
-          data: geojsonData,
-        } as maplibregl.GeoJSONSourceSpecification);
-
-        // Şehir noktalarını ekle
-        map.current.addLayer({
-          id: "cities-layer",
-          type: "circle",
-          source: "cities",
-          paint: {
-            "circle-radius": 8,
-            "circle-color": "#3887be",
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#ffffff",
-          },
-        });
-
-        // Şehir isimlerini ekle
-        map.current.addLayer({
-          id: "city-labels",
-          type: "symbol",
-          source: "cities",
-          layout: {
-            "text-field": ["get", "name"],
-            "text-font": ["Noto Sans Regular"],
-            "text-offset": [0, 1.5],
-            "text-anchor": "top",
-            "text-size": 12,
-          },
-          paint: {
-            "text-color": "#000000",
-            "text-halo-color": "#ffffff",
-            "text-halo-width": 1,
-          },
-        });
-
-        // Şehirlere tıklama olayı ekle
-        map.current.on("click", "cities-layer", (e) => {
-          if (e.features && e.features.length > 0) {
-            // Tıklama olayında varsayılan davranışı önle
-            e.preventDefault();
-
-            const feature = e.features[0];
-            const props = feature.properties;
-
-            if (props && props.plate) {
-              const plateNo = props.plate;
-              const cityName = props.name;
-              // Redux üzerinden city seçimini yap
-              dispatch(selectCity({ plate: plateNo, name: cityName }));
-            }
-          }
-        });
-
-        // Fare imlecini değiştir
-        map.current.on("mouseenter", "cities-layer", () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = "pointer";
-          }
-        });
-
-        map.current.on("mouseleave", "cities-layer", () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = "";
-          }
-        });
-      });
-    }
-
+    // Temizleme fonksiyonu
     return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
+      mapInstance.remove();
+      map.current = null;
     };
-  }, [dispatch]);
+  }, [setupMapLayers]);
 
   // Seçili şehri vurgula - harita yüklendikten sonra çalışsın
   useEffect(() => {
-    if (!mapLoaded || !map.current || !map.current.isStyleLoaded()) return;
+    if (!mapLoaded || !map.current) return;
+    highlightSelectedCity(map.current, selectedCityPlate);
+  }, [selectedCityPlate, mapLoaded, highlightSelectedCity]);
 
-    // Seçili şehri vurgula
-    map.current.setPaintProperty("cities-layer", "circle-color", [
-      "case",
-      ["==", ["get", "plate"], selectedCityPlate],
-      "#ff0000", // seçili şehir rengi
-      "#3887be", // normal renk
-    ]);
-  }, [selectedCityPlate, mapLoaded]);
-
-  // Handle container size changes
+  // Container boyutu değişikliklerini işle
   useEffect(() => {
     if (containerWidth > 0 && containerHeight > 0 && map.current && mapLoaded) {
       map.current.resize();
 
-      // Adjust zoom based on container size
-      if (containerWidth < 640) {
-        // Mobile view
-        map.current.setZoom(4.8);
-      } else {
-        map.current.setZoom(5.5);
-      }
+      // Ekran boyutuna göre zoom seviyesini ayarla
+      const newZoom =
+        containerWidth < MAP_CONFIG.mobileBreakpoint
+          ? MAP_CONFIG.mobileZoom
+          : MAP_CONFIG.zoom;
+
+      map.current.setZoom(newZoom);
     }
   }, [containerWidth, containerHeight, mapLoaded]);
+
+  const getSelectedCityName = () => {
+    if (!selectedCityPlate) return null;
+    return turkeyProvinces.features.find(
+      (f) => f.properties.plate === selectedCityPlate
+    )?.properties.name;
+  };
 
   return (
     <div className="h-full">
@@ -233,11 +240,7 @@ const TurkeyMap = () => {
           <p className="text-sm md:text-base">
             Seçili İl:{" "}
             <span className="font-semibold text-primary-600">
-              {
-                turkeyProvinces.features.find(
-                  (f) => f.properties.plate === selectedCityPlate
-                )?.properties.name
-              }
+              {getSelectedCityName()}
             </span>
           </p>
         </div>

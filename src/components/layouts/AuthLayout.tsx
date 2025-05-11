@@ -2,6 +2,7 @@ import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import { selectAuth } from "@/store/auth";
 import { useSelector } from "react-redux";
+import { ROUTES } from "@/constants/constants";
 
 type AuthLayoutProps = {
   children: ReactNode;
@@ -15,10 +16,10 @@ export default function AuthLayout({ children, requireAuth }: AuthLayoutProps) {
 
   useEffect(() => {
     if (requireAuth && !isAuthenticated) {
-      push("/login");
+      push(ROUTES.login);
     }
     if (!requireAuth && isAuthenticated) {
-      push("/");
+      push(ROUTES.home);
     }
   }, [isAuthenticated, push, requireAuth]);
 

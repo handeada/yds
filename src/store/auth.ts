@@ -17,28 +17,9 @@ const initialState: AuthState = {
   error: null,
 };
 
-const getInitialState = (): AuthState => {
-  if (typeof window === "undefined") {
-    return initialState;
-  }
-
-  try {
-    const username = localStorage.getItem("username");
-    return {
-      user: {
-        username,
-        isAuthenticated: !!username,
-      },
-      error: null,
-    };
-  } catch {
-    return initialState;
-  }
-};
-
 const authSlice = createSlice({
   name: "auth",
-  initialState: getInitialState(),
+  initialState,
   selectors: {
     selectAuth: (state) => state,
   },
@@ -46,7 +27,6 @@ const authSlice = createSlice({
     login: (state, action: PayloadAction<LoginFormData>) => {
       const { username, password } = action.payload;
       if (username === "admin" && password === "12345") {
-        localStorage.setItem("username", username);
         return {
           user: {
             username,
@@ -66,7 +46,6 @@ const authSlice = createSlice({
       }
     },
     logout: () => {
-      localStorage.removeItem("username");
       return {
         user: {
           username: null,
