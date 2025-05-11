@@ -22,7 +22,7 @@ export const TAB_TITLES: Record<TabType, { value: number; title: string }> = {
   ykeArchitectEngineer: { value: 5, title: "YKE MİMAR/MÜHENDİS" },
   controlWorker: { value: 6, title: "YARDIMCI KONTROL ELEMANI" },
   siteSupervisor: { value: 7, title: "ŞANTİYE ŞEFİ" },
-  distribution: { value: 8, title: "DENETÇİ LİSTESİ" },
+  distribution: { value: 8, title: "DAĞITIM LİSTESİ" },
 };
 
 /**

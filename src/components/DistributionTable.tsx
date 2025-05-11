@@ -24,7 +24,7 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
 
   // Veriyi daha uygun şekilde hazırla
   const distributionData = useMemo(() => {
-    return distributionResponse?.items || [];
+    return distributionResponse || [];
   }, [distributionResponse]);
 
   const columnHelper = createColumnHelper<DistributionItem>();
@@ -72,7 +72,7 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
         filterFn: "includesString",
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const handleRefresh = () => {
@@ -95,7 +95,7 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
     exportToCSV(
       distributionData,
       headers,
-      `DENETÇİ_LİSTESİ_${cityId}`,
+      `DAĞITIM_LİSTESİ_${cityId}`,
       (item: DistributionItem) => [
         formatDate(item.dagitim_tarihi),
         item.havuzgrup.toString(),

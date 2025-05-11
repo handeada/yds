@@ -17,6 +17,7 @@ const MapLayout = () => {
   // Component unmount olduğunda state'i temizle
   useEffect(() => {
     // Cleanup function
+    // Cleanup function
     return () => {
       dispatch(clearSelection());
     };

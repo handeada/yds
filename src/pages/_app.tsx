@@ -2,18 +2,9 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import dynamic from "next/dynamic";
 import store, { persistor } from "@/store";
-
-// Client-Only bileşenini lazy load et
-const ClientOnly = dynamic(() => import("@/components/layouts/ClientOnly"), {
-  ssr: false,
-});
-
-// AuthLayout bileşenini de lazy load et
-const AuthLayout = dynamic(() => import("@/components/layouts/AuthLayout"), {
-  ssr: false,
-});
+import ClientOnly from "@/components/layouts/ClientOnly";
+import AuthLayout from "@/components/layouts/AuthLayout";
 
 // Sayfa bazlı koruma yapısını belirle
 type CustomAppProps = AppProps & {
