@@ -4,6 +4,9 @@ import CityStatistics from "./CityStatistics";
 import YdkTable from "./YdkTable";
 import AuditorTable from "./AuditorTable";
 import LaboratoryTabs from "./LaboratoryTabs";
+import YKEArchitectEngineerTable from "./YKEArchitectEngineerTable";
+import ControlWorkerTable from "./ControlWorkerTable";
+import SiteSupervisorTable from "./SiteSupervisorTable";
 import { useGetCityStatisticsQuery } from "@/services/department";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
@@ -124,6 +127,18 @@ const CityStatisticsSidebar: React.FC = () => {
 
                 {activeTab === TAB_TITLES.laboratory.value && (
                   <LaboratoryTabs />
+                )}
+
+                {activeTab === TAB_TITLES.ykeArchitectEngineer.value && (
+                  <YKEArchitectEngineerTable cityId={selectedCityPlate} />
+                )}
+
+                {activeTab === TAB_TITLES.controlWorker.value && (
+                  <ControlWorkerTable cityId={selectedCityPlate} />
+                )}
+
+                {activeTab === TAB_TITLES.siteSupervisor.value && (
+                  <SiteSupervisorTable cityId={selectedCityPlate} />
                 )}
               </div>
             </div>

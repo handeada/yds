@@ -19,6 +19,9 @@ import { Department } from "@/services/department";
 import { DocumentApplication } from "@/services/document-application";
 import { ExperimentMaterialStandards } from "@/services/experiment-material-standards";
 import { LabExperimentMaterialStandards } from "@/services/lab-experiment-material-standards";
+import { YKEArchitectEngineerApi } from "@/services/yke-architect-engineer";
+import { ControlWorkerApi } from "@/services/control-worker";
+import { SiteSupervisorApi } from "@/services/site-supervisor";
 
 const reducers = {
   auth: authSlice.reducer,
@@ -32,6 +35,9 @@ const services = {
     ExperimentMaterialStandards.reducer,
   [LabExperimentMaterialStandards.reducerPath]:
     LabExperimentMaterialStandards.reducer,
+  [YKEArchitectEngineerApi.reducerPath]: YKEArchitectEngineerApi.reducer,
+  [ControlWorkerApi.reducerPath]: ControlWorkerApi.reducer,
+  [SiteSupervisorApi.reducerPath]: SiteSupervisorApi.reducer,
 };
 
 const combinedReducers = combineReducers({
@@ -44,6 +50,9 @@ const middlewares = [
   DocumentApplication.middleware,
   ExperimentMaterialStandards.middleware,
   LabExperimentMaterialStandards.middleware,
+  YKEArchitectEngineerApi.middleware,
+  ControlWorkerApi.middleware,
+  SiteSupervisorApi.middleware,
 ];
 
 const persistedReducer = persistReducer(
