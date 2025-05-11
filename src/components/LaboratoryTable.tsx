@@ -39,10 +39,8 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
     setModalOpen(true);
   };
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<LaboratoryItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("fileNumber", {
@@ -88,7 +86,6 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
     [columnHelper]
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!laboratoryData?.items) return [];
     return laboratoryData.items;
@@ -124,11 +121,9 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

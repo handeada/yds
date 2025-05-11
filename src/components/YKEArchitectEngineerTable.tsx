@@ -30,7 +30,6 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
     { skip: !cityId }
   );
 
-  // Custom filter function for working status
   const statusFilterFn: FilterFn<YKEArchitectEngineerItem> = (
     row,
     columnId,
@@ -44,10 +43,8 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
     return displayValue.toLowerCase().includes(filterValue.toLowerCase());
   };
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<YKEArchitectEngineerItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("personName", {
@@ -96,7 +93,6 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
     []
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!ykeArchitectEngineerData?.items) return [];
     return ykeArchitectEngineerData.items;
@@ -127,11 +123,9 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

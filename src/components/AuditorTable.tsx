@@ -28,7 +28,6 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
     { skip: !cityId }
   );
 
-  // Custom filter function for working status
   const statusFilterFn: FilterFn<AuditorItem> = (
     row,
     columnId,
@@ -42,10 +41,8 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
     return displayValue.toLowerCase().includes(filterValue.toLowerCase());
   };
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<AuditorItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("personName", {
@@ -94,7 +91,6 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
     []
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!auditorData?.items) return [];
     return auditorData.items;
@@ -125,11 +121,9 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

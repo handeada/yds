@@ -1,40 +1,94 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YDS Projesi
 
-## Getting Started
+Bu proje [Next.js](https://nextjs.org/) kullanılarak [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) ile oluşturulmuştur.
 
-First, run the development server:
+## Kurulum ve Çalıştırma
+
+1. Projeyi klonlayın:
+
+```bash
+git clone [repo-url]
+cd yds_project
+```
+
+2. Bağımlılıkları yükleyin:
+
+```bash
+npm install
+```
+
+3. Geliştirme sunucusunu başlatın:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açarak uygulamayı görüntüleyin.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Kullanılan Teknolojiler ve Kütüphaneler
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Temel Teknolojiler
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- **Next.js**: React tabanlı web framework
+- **React**: Kullanıcı arayüzü için JavaScript kütüphanesi
+- **TypeScript**: Tip güvenliği sağlayan JavaScript üst kümesi
+- **Redux Toolkit**: Durum yönetimi için kullanılan kütüphane
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### UI ve Stil
 
-## Learn More
+- **TailwindCSS**: Hızlı UI geliştirme için CSS framework'ü
+- **Framer Motion**: Animasyonlar için kullanılan kütüphane
 
-To learn more about Next.js, take a look at the following resources:
+### Harita ve Veri
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Maplibre-GL** ve **React-Map-GL**: Harita işlevselliği için
+- **Tanstack React Table**: Veri tablolarını yönetmek için
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Form Yönetimi ve Doğrulama
 
-## Deploy on Vercel
+- **React Hook Form**: Form yönetimi
+- **Zod**: Veri doğrulama şemaları için
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### API İşlemleri
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Axios**: HTTP istekleri için
+
+## Proje Yapısı ve Mimarisi
+
+Proje, modüler bir yapı ile organize edilmiştir:
+
+- `/src/components`: Yeniden kullanılabilir UI bileşenleri
+- `/src/pages`: Uygulama sayfaları ve API route'ları
+- `/src/store`: Redux ile durum yönetimi
+- `/src/services`: API istekleri ve harici servis entegrasyonları
+- `/src/hooks`: Özel React hook'ları
+- `/src/contexts`: React Context API kullanılan bileşenler
+- `/src/utils`: Yardımcı fonksiyonlar
+- `/src/constants`: Sabit değerler
+- `/src/types`: TypeScript tip tanımlamaları
+- `/src/schemas`: Veri doğrulama şemaları
+- `/src/models`: Veri modelleri
+- `/src/styles`: Stil dosyaları
+- `/src/libs`: Harici kütüphane adaptörleri
+
+## Karşılaşılan Zorluklar ve Çözüm Yaklaşımları
+
+### Durum Yönetimi
+
+- **Zorluk**: Karmaşık durum yönetimi ve bileşenler arası veri paylaşımı
+- **Çözüm**: Redux Toolkit ve Redux Persist kullanılarak merkezi bir durum yönetimi oluşturuldu, böylece veriler sayfalar arasında korundu.
+
+### Harita Entegrasyonu
+
+- **Zorluk**: Harita üzerinde dinamik veri gösterimi ve etkileşimli öğeler
+- **Çözüm**: Maplibre-GL ve React-Map-GL kütüphaneleri birlikte kullanılarak performanslı bir harita deneyimi sağlandı.
+
+### Form Yönetimi ve Doğrulama
+
+- **Zorluk**: Karmaşık formların yönetimi ve doğrulanması
+- **Çözüm**: React Hook Form ve Zod kombinasyonu kullanılarak tip güvenliği ve doğrulama işlemleri optimize edildi.
+
+### Duyarlı Tasarım
+
+- **Zorluk**: Farklı ekran boyutlarına uyumlu arayüz
+- **Çözüm**: TailwindCSS'in duyarlı tasarım özellikleri kullanılarak tüm cihazlarda tutarlı bir deneyim sağlandı.

@@ -80,7 +80,6 @@ export const SkeletonTable: React.FC<{ rows?: number; columns?: number }> = ({
 }) => {
   return (
     <div className="animate-pulse w-full">
-      {/* Table header with actions */}
       <div className="flex justify-between items-center mb-4">
         <div className="h-5 bg-gray-200 rounded w-32" />
         <div className="flex space-x-2">
@@ -89,13 +88,10 @@ export const SkeletonTable: React.FC<{ rows?: number; columns?: number }> = ({
         </div>
       </div>
 
-      {/* Search bar */}
       <div className="h-9 bg-gray-200 rounded-md mb-4 w-full" />
 
-      {/* Table header */}
       <div className="h-10 bg-gray-200 rounded-t mb-1 w-full" />
 
-      {/* Table rows */}
       {[...Array(rows)].map((_, i) => (
         <div key={i} className="flex space-x-1 mb-2">
           {[...Array(columns)].map((_, j) => (
@@ -108,7 +104,6 @@ export const SkeletonTable: React.FC<{ rows?: number; columns?: number }> = ({
         </div>
       ))}
 
-      {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <div className="h-6 bg-gray-200 rounded w-24" />
         <div className="flex space-x-1">
@@ -129,10 +124,8 @@ export const SkeletonCards: React.FC<{ count?: number; columns?: number }> = ({
 }) => {
   return (
     <div className="p-5 bg-gray-50 rounded-md shadow mt-4">
-      {/* Başlık için skeleton */}
       <div className="h-7 bg-gray-200 rounded-md w-3/5 mb-5 mx-auto animate-pulse"></div>
 
-      {/* İstatistik kartları için grid */}
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${columns} gap-4`}
       >
@@ -153,10 +146,8 @@ export const SkeletonCards: React.FC<{ count?: number; columns?: number }> = ({
 export const SkeletonStatistics: React.FC = () => {
   return (
     <div className="p-5 bg-gray-50 rounded-md shadow mt-4">
-      {/* Başlık için skeleton */}
       <div className="h-7 bg-gray-200 rounded-md w-3/5 mb-5 mx-auto animate-pulse"></div>
 
-      {/* İstatistik kartları için grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(6)].map((_, index) => (
           <div

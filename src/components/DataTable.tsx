@@ -131,7 +131,6 @@ function DataTable<T extends object>({
 
   return (
     <div className="mx-4">
-      {/* Table Header with Actions */}
       <div className="mb-3 flex flex-wrap items-center justify-between">
         <div className="flex items-start space-x-2">
           <h3 className="text-sm font-medium text-slate-700">Bulunan kayıt</h3>
@@ -168,7 +167,6 @@ function DataTable<T extends object>({
         </div>
       </div>
 
-      {/* Search Input */}
       <div className="mb-3">
         <div className="relative rounded-md shadow-sm">
           <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
@@ -194,7 +192,6 @@ function DataTable<T extends object>({
         </div>
       </div>
 
-      {/* Table */}
       <div className="rounded-md border border-slate-200 overflow-hidden shadow-sm">
         <div
           className="overflow-x-auto"
@@ -202,7 +199,6 @@ function DataTable<T extends object>({
         >
           <table className="min-w-full divide-y divide-slate-200 text-xs">
             <thead>
-              {/* Column Headers - Sort Controls */}
               <tr className="bg-slate-50 text-left">
                 {table.getHeaderGroups()[0].headers.map((header) => (
                   <th
@@ -229,7 +225,6 @@ function DataTable<T extends object>({
                   </th>
                 ))}
               </tr>
-              {/* Column Filters */}
               <tr className="bg-slate-100 border-b border-slate-200">
                 {table.getHeaderGroups()[0].headers.map((header) => (
                   <th key={header.id} className="px-2 py-1">
@@ -300,7 +295,6 @@ function DataTable<T extends object>({
         </div>
       </div>
 
-      {/* Pagination Controls */}
       <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between text-xs">
         <div className="flex items-center space-x-2 mb-2 sm:mb-0">
           <span className="text-slate-600">Sayfa başı:</span>

@@ -249,28 +249,34 @@ const TurkeyMap = () => {
       map.current.resize();
 
       // Ekran boyutuna göre zoom seviyesini ayarla
-      const newZoom =
-        containerWidth < MAP_CONFIG.mobileBreakpoint
-          ? MAP_CONFIG.mobileZoom
-          : MAP_CONFIG.zoom;
+      const isMobile = containerWidth <= MAP_CONFIG.mobileBreakpoint;
+      const newZoom = isMobile ? MAP_CONFIG.mobileZoom : MAP_CONFIG.zoom;
 
-      map.current.setZoom(newZoom);
+      if (map.current.getZoom() !== newZoom) {
+        map.current.setZoom(newZoom);
+      }
     }
   }, [containerWidth, containerHeight, mapLoaded]);
 
   const getSelectedCityName = () => {
     if (!selectedCityPlate) return null;
-    return turkeyProvinces.features.find(
+    const feature = turkeyProvinces.features.find(
       (f) => f.properties.plate === selectedCityPlate
-    )?.properties.name;
+    );
+    return feature ? feature.properties.name : null;
   };
 
   return (
-    <div className="h-full">
+    <div className="relative w-full h-full">
       <div
         ref={mapContainer}
-        className="w-full h-full rounded-md overflow-hidden"
+        className="map-container w-full h-full rounded-md overflow-hidden"
       />
+      {selectedCityPlate && (
+        <div className="absolute top-2 right-2 bg-white py-1 px-2 rounded-md shadow text-sm">
+          {getSelectedCityName()}
+        </div>
+      )}
       <style jsx global>{`
         .map-city-popup {
           z-index: 1000;
@@ -295,16 +301,6 @@ const TurkeyMap = () => {
           display: none !important;
         }
       `}</style>
-      {selectedCityPlate && (
-        <div className="mt-3 text-center">
-          <p className="text-sm md:text-base">
-            Seçili İl:{" "}
-            <span className="font-semibold text-primary-600">
-              {getSelectedCityName()}
-            </span>
-          </p>
-        </div>
-      )}
     </div>
   );
 };

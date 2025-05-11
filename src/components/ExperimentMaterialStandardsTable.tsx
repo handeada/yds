@@ -20,10 +20,8 @@ const ExperimentMaterialStandardsTable: React.FC = () => {
     ...createPaginationParams(pagination.pageIndex, pagination.pageSize),
   });
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<ExperimentMaterialStandardItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor(
@@ -66,7 +64,6 @@ const ExperimentMaterialStandardsTable: React.FC = () => {
     [columnHelper]
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!standardsData?.items) return [];
     return standardsData.items;
@@ -95,7 +92,6 @@ const ExperimentMaterialStandardsTable: React.FC = () => {
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 

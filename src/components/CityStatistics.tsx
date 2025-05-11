@@ -31,10 +31,8 @@ const CityStatistics: React.FC<CityStatisticsProps> = ({
     );
   }
 
-  // İlk istatistik öğesini al
   const stat = statistics[0];
 
-  // İstatistikleri daha anlaşılır formatta göstermek için
   const statsData = [
     {
       id: 1,

@@ -27,10 +27,8 @@ const LaboratoryScopeList: React.FC<LaboratoryScopeListProps> = ({
     take: pagination.pageSize,
   });
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<LabExperimentMaterialStandardItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor(
@@ -66,7 +64,6 @@ const LaboratoryScopeList: React.FC<LaboratoryScopeListProps> = ({
     [columnHelper]
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!scopeListData?.items) return [];
     return scopeListData.items;
@@ -79,7 +76,6 @@ const LaboratoryScopeList: React.FC<LaboratoryScopeListProps> = ({
   const handleExportCSV = () => {
     if (!scopeListData?.items?.length) return;
 
-    // Create CSV content
     const headers = ["Deney Malzemesi", "Deney Adı", "Deney Metodu"];
     const csvContent = [
       headers.join(","),
@@ -92,7 +88,6 @@ const LaboratoryScopeList: React.FC<LaboratoryScopeListProps> = ({
       ),
     ].join("\n");
 
-    // Create and download file
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -108,7 +103,6 @@ const LaboratoryScopeList: React.FC<LaboratoryScopeListProps> = ({
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 

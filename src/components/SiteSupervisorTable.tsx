@@ -30,7 +30,6 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
     { skip: !cityId }
   );
 
-  // Custom filter function for working status
   const statusFilterFn: FilterFn<SiteSupervisorItem> = (
     row,
     columnId,
@@ -44,10 +43,8 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
     return displayValue.toLowerCase().includes(filterValue.toLowerCase());
   };
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<SiteSupervisorItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("personName", {
@@ -96,7 +93,6 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
     []
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!siteSupervisorData?.items) return [];
     return siteSupervisorData.items;
@@ -127,11 +123,9 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

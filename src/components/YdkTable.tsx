@@ -28,10 +28,8 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
     { skip: !cityId }
   );
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<YdkItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("fileNumber", {
@@ -60,11 +58,9 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
     []
   );
 
-  // Handle data for the table with phone field added
   const data = useMemo(() => {
     if (!ydkData?.items) return [];
 
-    // Add phone field to each item if missing from API
     return ydkData.items;
   }, [ydkData]);
 
@@ -91,11 +87,9 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

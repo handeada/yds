@@ -32,12 +32,10 @@ const MapLayout = () => {
           </p>
         </div>
 
-        {/* Map component */}
         <div className="h-[500px]">
           <TurkeyMap />
         </div>
 
-        {/* City Statistics Sidebar - artık Redux ile kontrol ediliyor */}
         <CityStatisticsSidebar />
       </div>
     </div>

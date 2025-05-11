@@ -22,16 +22,13 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
     refetch,
   } = useGetDistributionListQuery(cityId || 0, { skip: !cityId });
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<DistributionResponse>();
 
-  // Format date function
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString("tr-TR");
   };
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("dagitim_tarihi", {
@@ -106,19 +103,16 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
     );
   };
 
-  // Client-side pagination handler
   const handlePageChange = (pageIndex: number, pageSize: number) => {
     setPagination({ pageIndex, pageSize });
   };
 
-  // Calculate the paginated data
   const paginatedData = useMemo(() => {
     const start = pagination.pageIndex * pagination.pageSize;
     const end = start + pagination.pageSize;
     return distributionData.slice(start, end);
   }, [distributionData, pagination]);
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 

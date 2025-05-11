@@ -83,7 +83,6 @@ function Login() {
             )}
           </div>
 
-          {/* Global form error veya API error */}
           {errors.root?.message && (
             <div className="form-error p-3 bg-red-50 rounded-md">
               {errors.root?.message}

@@ -40,7 +40,6 @@ const CityStatisticsSidebar: React.FC = () => {
     <AnimatePresence>
       {selectedCityPlate && (
         <>
-          {/* Overlay */}
           <motion.div
             className="fixed inset-0 bg-black z-40"
             initial={{ opacity: 0 }}
@@ -50,7 +49,6 @@ const CityStatisticsSidebar: React.FC = () => {
             onClick={handleClose}
           />
 
-          {/* Sidebar */}
           <motion.div
             className="fixed top-0 left-0 h-full w-full sm:w-[550px] md:w-[650px] lg:w-[750px] bg-white shadow-xl z-50 overflow-y-auto"
             style={{ overflowX: "hidden" }}
@@ -79,7 +77,6 @@ const CityStatisticsSidebar: React.FC = () => {
                 </button>
               </div>
 
-              {/* Tab navigation */}
               <div className="border-b border-gray-200 mb-4 overflow-x-auto scrollbar-hide">
                 <nav
                   className="-mb-px flex space-x-1 sm:space-x-4 min-w-max"
@@ -101,7 +98,6 @@ const CityStatisticsSidebar: React.FC = () => {
                 </nav>
               </div>
 
-              {/* Tab content */}
               <div className="overflow-x-hidden">
                 {activeTab === TAB_TITLES.statistics.value &&
                   (isLoading || isFetching ? (
