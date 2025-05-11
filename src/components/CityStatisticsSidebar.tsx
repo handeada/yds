@@ -76,7 +76,7 @@ const CityStatisticsSidebar: React.FC = () => {
               </div>
 
               {/* Tab navigation */}
-              <div className="border-b border-gray-200 mb-3 overflow-x-auto scrollbar-hide">
+              <div className="border-b border-gray-200 mb-4 overflow-x-auto scrollbar-hide">
                 <nav
                   className="-mb-px flex space-x-1 sm:space-x-4 min-w-max"
                   aria-label="Tabs"

@@ -3,6 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { ExperimentMaterialStandardItem } from "@/models";
 import { useGetExperimentMaterialStandardsListQuery } from "@/services/experiment-material-standards";
 import DataTable from "./DataTable";
+import { createPaginationParams, exportToCSV } from "@/utils";
 
 const ExperimentMaterialStandardsTable: React.FC = () => {
   const [pagination, setPagination] = useState({
@@ -16,8 +17,7 @@ const ExperimentMaterialStandardsTable: React.FC = () => {
     error,
     refetch,
   } = useGetExperimentMaterialStandardsListQuery({
-    skip: pagination.pageIndex * pagination.pageSize,
-    take: pagination.pageSize,
+    ...createPaginationParams(pagination.pageIndex, pagination.pageSize),
   });
 
   // Column definition using TanStack column helper
@@ -73,30 +73,19 @@ const ExperimentMaterialStandardsTable: React.FC = () => {
   const handleExportCSV = () => {
     if (!standardsData?.items?.length) return;
 
-    // Create CSV content
     const headers = ["Kategori", "Deney Adı", "Standart", "Durum"];
-    const csvContent = [
-      headers.join(","),
-      ...standardsData.items.map((item: ExperimentMaterialStandardItem) =>
-        [
-          `"${item.experimentMaterial.experimentMaterialCategory.name}"`,
-          `"${item.experimentMaterial.name}"`,
-          `"${item.standards.name}"`,
-          `"${item.active ? "Aktif" : "Pasif"}"`,
-        ].join(",")
-      ),
-    ].join("\n");
 
-    // Create and download file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "Kapsam_Listesi.csv");
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    exportToCSV(
+      standardsData.items,
+      headers,
+      "Kapsam_Listesi",
+      (item: ExperimentMaterialStandardItem) => [
+        item.experimentMaterial.experimentMaterialCategory.name,
+        item.experimentMaterial.name,
+        item.standards.name,
+        item.active ? "Aktif" : "Pasif",
+      ]
+    );
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {

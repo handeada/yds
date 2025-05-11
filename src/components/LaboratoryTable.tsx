@@ -6,6 +6,7 @@ import DataTable from "./DataTable";
 import Modal from "./Modal";
 import LaboratoryScopeList from "./LaboratoryScopeList";
 import { FiClipboard } from "react-icons/fi";
+import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface LaboratoryTableProps {
   cityId: number | null;
@@ -28,8 +29,7 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
   } = useGetLaboratoryListQuery(
     {
       locationId: cityId || 0,
-      skip: pagination.pageIndex * pagination.pageSize,
-      take: pagination.pageSize,
+      ...createPaginationParams(pagination.pageIndex, pagination.pageSize),
     },
     { skip: !cityId }
   );
@@ -101,7 +101,6 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
   const handleExportCSV = () => {
     if (!laboratoryData?.items?.length) return;
 
-    // Create CSV content
     const headers = [
       "Belge No",
       "Ünvanı",
@@ -109,29 +108,19 @@ const LaboratoryTable: React.FC<LaboratoryTableProps> = ({ cityId }) => {
       "Laboratuvar Tipi",
       "Telefon",
     ];
-    const csvContent = [
-      headers.join(","),
-      ...laboratoryData.items.map((item) =>
-        [
-          `"${item.fileNumber}"`,
-          `"${item.name}"`,
-          `"${item.locationName}"`,
-          `"${item.labType}"`,
-          `"${item.phone || "-"}"`,
-        ].join(",")
-      ),
-    ].join("\n");
 
-    // Create and download file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Laboratuvar_Listesi_${cityId}.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    exportToCSV(
+      laboratoryData.items,
+      headers,
+      `Laboratuvar_Listesi_${cityId}`,
+      (item: LaboratoryItem) => [
+        item.fileNumber,
+        item.name,
+        item.locationName,
+        item.labType,
+        item.phone,
+      ]
+    );
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {

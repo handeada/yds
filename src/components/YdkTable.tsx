@@ -3,6 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useGetYdkListQuery } from "@/services/department";
 import DataTable from "./DataTable";
 import { YdkItem } from "@/models";
+import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface YdkTableProps {
   cityId: number | null;
@@ -22,8 +23,7 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
   } = useGetYdkListQuery(
     {
       locationId: cityId || 0,
-      skip: pagination.pageIndex * pagination.pageSize,
-      take: pagination.pageSize,
+      ...createPaginationParams(pagination.pageIndex, pagination.pageSize),
     },
     { skip: !cityId }
   );
@@ -75,30 +75,19 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
   const handleExportCSV = () => {
     if (!ydkData?.items?.length) return;
 
-    // Create CSV content
     const headers = ["Belge No", "Ünvanı", "Adres", "Telefon"];
-    const csvContent = [
-      headers.join(","),
-      ...ydkData.items.map((item) =>
-        [
-          `"${item.fileNumber}"`,
-          `"${item.name}"`,
-          `"${item.address}"`,
-          `"${item.phone || "-"}"`,
-        ].join(",")
-      ),
-    ].join("\n");
 
-    // Create and download file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `YDK_Listesi_${cityId}.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    exportToCSV(
+      ydkData.items,
+      headers,
+      `YDK_Listesi_${cityId}`,
+      (item: YdkItem) => [
+        item.fileNumber,
+        item.name,
+        item.address,
+        item.phone || "-",
+      ]
+    );
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {

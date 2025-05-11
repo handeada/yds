@@ -3,6 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { AuditorItem } from "@/models";
 import { useGetAuditorListQuery } from "@/services/document-application";
 import DataTable from "./DataTable";
+import { createPaginationParams, exportToCSV } from "@/utils";
 
 interface AuditorTableProps {
   cityId: number | null;
@@ -22,8 +23,7 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
   } = useGetAuditorListQuery(
     {
       id: cityId || 0,
-      skip: pagination.pageIndex * pagination.pageSize,
-      take: pagination.pageSize,
+      ...createPaginationParams(pagination.pageIndex, pagination.pageSize),
     },
     { skip: !cityId }
   );
@@ -87,32 +87,21 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
   const handleExportCSV = () => {
     if (!auditorData?.items?.length) return;
 
-    // Create CSV content
     const headers = ["Adı", "Soyadı", "Görev", "Meslek", "Sicil No", "Durumu"];
-    const csvContent = [
-      headers.join(","),
-      ...auditorData.items.map((item) =>
-        [
-          `"${item.personName}"`,
-          `"${item.personSurName}"`,
-          `"${item.taskName}"`,
-          `"${item.titleName}"`,
-          `"${item.id}"`,
-          `"${item.working ? "Çalışıyor" : "Çalışmıyor"}"`,
-        ].join(",")
-      ),
-    ].join("\n");
 
-    // Create and download file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Denetci_Listesi_${cityId}.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    exportToCSV(
+      auditorData.items,
+      headers,
+      `Denetci_Listesi_${cityId}`,
+      (item: AuditorItem) => [
+        item.personName,
+        item.personSurName,
+        item.taskName,
+        item.titleName,
+        item.id.toString(),
+        item.working ? "Çalışıyor" : "Çalışmıyor",
+      ]
+    );
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
