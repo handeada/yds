@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { ControlWorkerItem } from "@/models/domain/document-application/control-worker.model";
 import { useGetControlWorkerListQuery } from "@/services/control-worker";
 import DataTable from "./DataTable";
@@ -27,6 +27,20 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
     },
     { skip: !cityId }
   );
+
+  // Custom filter function for working status
+  const statusFilterFn: FilterFn<ControlWorkerItem> = (
+    row,
+    columnId,
+    filterValue
+  ) => {
+    if (!filterValue || filterValue === "") return true;
+
+    const status = row.getValue(columnId) as boolean;
+    const displayValue = status ? "Çalışıyor" : "Çalışmıyor";
+
+    return displayValue.toLowerCase().includes(filterValue.toLowerCase());
+  };
 
   // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<ControlWorkerItem>();
@@ -74,7 +88,7 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
             {info.getValue() ? "Çalışıyor" : "Çalışmıyor"}
           </span>
         ),
-        filterFn: "includesString",
+        filterFn: statusFilterFn,
       }),
     ],
     []

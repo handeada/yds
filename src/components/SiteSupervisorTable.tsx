@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { SiteSupervisorItem } from "@/models/domain/document-application/site-supervisor.model";
 import { useGetSiteSupervisorListQuery } from "@/services/site-supervisor";
 import DataTable from "./DataTable";
@@ -29,6 +29,20 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
     },
     { skip: !cityId }
   );
+
+  // Custom filter function for working status
+  const statusFilterFn: FilterFn<SiteSupervisorItem> = (
+    row,
+    columnId,
+    filterValue
+  ) => {
+    if (!filterValue || filterValue === "") return true;
+
+    const status = row.getValue(columnId) as boolean;
+    const displayValue = status ? "Çalışıyor" : "Çalışmıyor";
+
+    return displayValue.toLowerCase().includes(filterValue.toLowerCase());
+  };
 
   // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<SiteSupervisorItem>();
@@ -76,7 +90,7 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
             {info.getValue() ? "Çalışıyor" : "Çalışmıyor"}
           </span>
         ),
-        filterFn: "includesString",
+        filterFn: statusFilterFn,
       }),
     ],
     []

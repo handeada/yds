@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { YKEArchitectEngineerItem } from "@/models/domain/document-application/yke-architect-engineer.model";
 import { useGetYKEArchitectEngineerListQuery } from "@/services/yke-architect-engineer";
 import DataTable from "./DataTable";
@@ -29,6 +29,20 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
     },
     { skip: !cityId }
   );
+
+  // Custom filter function for working status
+  const statusFilterFn: FilterFn<YKEArchitectEngineerItem> = (
+    row,
+    columnId,
+    filterValue
+  ) => {
+    if (!filterValue || filterValue === "") return true;
+
+    const status = row.getValue(columnId) as boolean;
+    const displayValue = status ? "Çalışıyor" : "Çalışmıyor";
+
+    return displayValue.toLowerCase().includes(filterValue.toLowerCase());
+  };
 
   // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<YKEArchitectEngineerItem>();
@@ -76,7 +90,7 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
             {info.getValue() ? "Çalışıyor" : "Çalışmıyor"}
           </span>
         ),
-        filterFn: "includesString",
+        filterFn: statusFilterFn,
       }),
     ],
     []
