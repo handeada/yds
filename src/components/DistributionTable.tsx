@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DistributionResponse } from "@/models/distribution.model";
-import { useGetDistributionListQuery } from "@/services/document-application";
+import { useGetDistributionListQuery } from "@/services/distribution";
 import DataTable from "./DataTable";
 import { exportToCSV } from "@/utils";
 

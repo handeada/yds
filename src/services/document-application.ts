@@ -1,18 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { AuditorQueryParams, AuditorResponse, AuditorRequest } from "@/models";
-import { DistributionResponse } from "@/models/distribution.model";
+import axiosBaseQuery from "@/utils/axiosBaseQuery";
 
 export const DocumentApplication = createApi({
-  reducerPath: "auditorApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://businessyds.csb.gov.tr/api/",
-  }),
+  reducerPath: "documentApplicationApi",
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     getAuditorList: builder.query<AuditorResponse, AuditorQueryParams>({
       query: (params) => ({
         url: "documentApplication/findAllPublicAuditors",
         method: "POST",
-        body: {
+        data: {
           requireTotalCount: true,
           searchOperation: "contains",
           searchValue: params.searchTerm || null,
@@ -31,11 +29,7 @@ export const DocumentApplication = createApi({
         } as AuditorRequest,
       }),
     }),
-    getDistributionList: builder.query<DistributionResponse[], number>({
-      query: (cityId) => `distribution/findAllPublic/${cityId}`,
-    }),
   }),
 });
 
-export const { useGetAuditorListQuery, useGetDistributionListQuery } =
-  DocumentApplication;
+export const { useGetAuditorListQuery } = DocumentApplication;

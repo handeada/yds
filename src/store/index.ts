@@ -17,6 +17,7 @@ import authSlice from "./auth";
 import mapSlice from "./map";
 import { Department } from "@/services/department";
 import { DocumentApplication } from "@/services/document-application";
+import { DistributionApi } from "@/services/distribution";
 import { ExperimentMaterialStandards } from "@/services/experiment-material-standards";
 import { LabExperimentMaterialStandards } from "@/services/lab-experiment-material-standards";
 import { AccountApplication } from "@/services/account-application";
@@ -29,6 +30,7 @@ const reducers = {
 const services = {
   [Department.reducerPath]: Department.reducer,
   [DocumentApplication.reducerPath]: DocumentApplication.reducer,
+  [DistributionApi.reducerPath]: DistributionApi.reducer,
   [ExperimentMaterialStandards.reducerPath]:
     ExperimentMaterialStandards.reducer,
   [LabExperimentMaterialStandards.reducerPath]:
@@ -44,6 +46,7 @@ const combinedReducers = combineReducers({
 const middlewares = [
   Department.middleware,
   DocumentApplication.middleware,
+  DistributionApi.middleware,
   ExperimentMaterialStandards.middleware,
   LabExperimentMaterialStandards.middleware,
   AccountApplication.middleware,

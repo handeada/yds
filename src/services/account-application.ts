@@ -4,17 +4,20 @@ import { HttpMethod } from "@/libs/axios";
 import {
   YKEArchitectEngineerQueryParams,
   YKEArchitectEngineerResponse,
+} from "@/models/domain/account-application/yke-architect-engineer.model";
+import {
   SiteSupervisorQueryParams,
   SiteSupervisorResponse,
+} from "@/models/domain/account-application/site-supervisor.model";
+import {
   ControlWorkerQueryParams,
   ControlWorkerResponse,
-} from "@/models";
+} from "@/models/domain/account-application/control-worker.model";
 
 export const AccountApplication = createApi({
   reducerPath: "accountApplicationApi",
   baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
-    // YKE Architect/Engineer related endpoints
     getYKEArchitectEngineerList: builder.query<
       YKEArchitectEngineerResponse,
       YKEArchitectEngineerQueryParams
@@ -47,7 +50,6 @@ export const AccountApplication = createApi({
       }),
     }),
 
-    // Site Supervisor related endpoints
     getSiteSupervisorList: builder.query<
       SiteSupervisorResponse,
       SiteSupervisorQueryParams
@@ -75,7 +77,6 @@ export const AccountApplication = createApi({
       }),
     }),
 
-    // Control Worker related endpoints
     getControlWorkerList: builder.query<
       ControlWorkerResponse,
       ControlWorkerQueryParams
