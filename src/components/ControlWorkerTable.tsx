@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { createColumnHelper, FilterFn } from "@tanstack/react-table";
-import { ControlWorkerItem } from "@/models/domain/document-application/control-worker.model";
-import { useGetControlWorkerListQuery } from "@/services/control-worker";
+import { ControlWorkerItem } from "@/models/domain/account-application/control-worker.model";
+import { useGetControlWorkerListQuery } from "@/services/account-application";
 import DataTable from "./DataTable";
 import { createPaginationParams, exportToCSV } from "@/utils";
 

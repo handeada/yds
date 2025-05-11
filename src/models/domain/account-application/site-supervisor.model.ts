@@ -1,4 +1,4 @@
-import { BaseItem, BaseResponse } from "@/models/common";
+import { BaseItem, BaseResponse } from "@/models";
 
 export interface SiteSupervisorQueryParams {
   id: number;
