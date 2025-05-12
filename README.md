@@ -94,6 +94,7 @@ Proje, modüler bir yapı ile organize edilmiştir:
 - **Assignment Aşama 2**: İkinci aşama geliştirmeler
 - **Authorization Geliştirmesi**: Mock auth yerine gerçek auth sistemi entegrasyonu
 - **Test Kapsamını Artırma**: Birim ve entegrasyon testlerinin eklenmesi
+- **Ortam Kurulumları ve Deployment**: Staging ve Production ortamlarının kurulumu ve deployment süreçlerinin yapılandırılması
 
 ## Karşılaşılan Zorluklar ve Çözüm Yaklaşımları
 
