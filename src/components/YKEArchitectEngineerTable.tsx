@@ -90,7 +90,7 @@ const YKEArchitectEngineerTable: React.FC<YKEArchitectEngineerTableProps> = ({
         filterFn: statusFilterFn,
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const data = useMemo(() => {

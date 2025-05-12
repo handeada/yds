@@ -4,6 +4,7 @@ import { selectAuth } from "@/store/auth";
 import { useSelector } from "react-redux";
 import { ROUTES } from "@/constants/constants";
 import { SkeletonSection } from "@/components/ui/Skeleton";
+import MainLayout from "./MainLayout";
 
 type AuthLayoutProps = {
   children: ReactNode;
@@ -31,6 +32,11 @@ export default function AuthLayout({ children, requireAuth }: AuthLayoutProps) {
         <SkeletonSection lines={5} className="max-w-md w-full" />
       </div>
     );
+  }
+
+  // Use MainLayout for authenticated pages, otherwise just render children
+  if (requireAuth && isAuthenticated) {
+    return <MainLayout>{children}</MainLayout>;
   }
 
   return <>{children}</>;
