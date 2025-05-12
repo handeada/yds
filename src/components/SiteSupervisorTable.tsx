@@ -65,7 +65,7 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
         filterFn: "includesString",
       }),
       columnHelper.accessor("titleName", {
-        header: "Meslek",
+        header: "Alan",
         cell: (info) => <span>{info.getValue() || "-"}</span>,
         filterFn: "includesString",
       }),
@@ -105,7 +105,7 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
   const handleExportCSV = () => {
     if (!siteSupervisorData?.items?.length) return;
 
-    const headers = ["Adı", "Soyadı", "Görev", "Meslek", "Sicil No", "Durumu"];
+    const headers = ["Adı", "Soyadı", "Görev", "Alan", "Sicil No", "Durumu"];
 
     exportToCSV(
       siteSupervisorData.items,

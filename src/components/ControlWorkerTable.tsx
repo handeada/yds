@@ -66,7 +66,7 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
         filterFn: "includesString",
       }),
       columnHelper.accessor("titleName", {
-        header: "Meslek",
+        header: "Alan",
         cell: (info) => <span>{info.getValue() || "-"}</span>,
         filterFn: "includesString",
       }),
@@ -107,7 +107,7 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
   const handleExportCSV = () => {
     if (!controlWorkerData?.items?.length) return;
 
-    const headers = ["Adı", "Soyadı", "Görev", "Meslek", "Sicil No", "Durumu"];
+    const headers = ["Adı", "Soyadı", "Görev", "Alan", "Sicil No", "Durumu"];
 
     exportToCSV(
       controlWorkerData.items,
@@ -129,7 +129,6 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
     setPagination({ pageIndex, pageSize });
   };
 
-  // Loading state
   if (!cityId)
     return <div className="text-center py-4">Lütfen bir il seçin</div>;
 
