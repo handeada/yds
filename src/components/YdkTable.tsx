@@ -55,7 +55,7 @@ const YdkTable: React.FC<YdkTableProps> = ({ cityId }) => {
         filterFn: "includesString",
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const data = useMemo(() => {

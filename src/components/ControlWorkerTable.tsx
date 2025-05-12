@@ -88,7 +88,7 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
         filterFn: statusFilterFn,
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const data = useMemo(() => {

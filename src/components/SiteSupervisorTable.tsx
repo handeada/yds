@@ -90,7 +90,7 @@ const SiteSupervisorTable: React.FC<SiteSupervisorTableProps> = ({
         filterFn: statusFilterFn,
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const data = useMemo(() => {
