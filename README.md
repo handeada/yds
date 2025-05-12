@@ -2,6 +2,10 @@
 
 Bu proje [Next.js v14](https://nextjs.org/) kullanılarak [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) ile oluşturulmuştur.
 
+## Canlı Demo
+
+Projenin canlı demo versiyonuna [https://yds-assignment.vercel.app/](https://yds-assignment.vercel.app/) adresinden erişebilirsiniz.
+
 ## Kurulum ve Çalıştırma
 
 1. Projeyi klonlayın:
