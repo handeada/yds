@@ -21,7 +21,6 @@ const CityStatisticsSidebar: React.FC = () => {
   const { selectedCityPlate, selectedCityName, activeTab } =
     useSelector(getSelectedCity);
 
-  // Fetch statistics for the selected city
   const {
     data: statistics,
     isLoading,
@@ -31,7 +30,6 @@ const CityStatisticsSidebar: React.FC = () => {
     skip: !selectedCityPlate,
   });
 
-  // Handle the sidebar close action
   const handleClose = () => {
     dispatch(closeSidebar());
   };

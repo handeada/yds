@@ -5,7 +5,6 @@ import { clearSelection } from "@/store/map";
 import { TurkeyMapSkeleton } from "@/components/ui/Skeletons";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-// Import TurkeyMap component dynamically
 const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
   ssr: false,
   loading: () => <TurkeyMapSkeleton />,
@@ -14,10 +13,7 @@ const TurkeyMap = dynamic(() => import("@/components/TurkeyMap"), {
 const MapLayout = () => {
   const dispatch = useAppDispatch();
 
-  // Component unmount olduğunda state'i temizle
   useEffect(() => {
-    // Cleanup function
-    // Cleanup function
     return () => {
       dispatch(clearSelection());
     };

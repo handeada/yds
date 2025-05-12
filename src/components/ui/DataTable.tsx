@@ -39,7 +39,6 @@ interface DataTableProps<T extends object> {
   exportButtonLabel?: string;
 }
 
-// Filter function for global search
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
   addMeta({ itemRank });
@@ -69,7 +68,6 @@ function DataTable<T extends object>({
 
   const { pageIndex, pageSize } = pagination;
 
-  // Initialize table instance
   const table = useReactTable({
     data,
     columns,
@@ -100,16 +98,13 @@ function DataTable<T extends object>({
     onColumnFiltersChange: setColumnFilters,
   });
 
-  // Page size options
   const pageSizeOptions = [5, 10, 25];
 
-  // Handle page size change
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSize = Number(e.target.value);
     table.setPageSize(newSize);
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="mx-4 py-4">

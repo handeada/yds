@@ -28,7 +28,6 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
     { skip: !cityId }
   );
 
-  // Custom filter function for working status
   const statusFilterFn: FilterFn<ControlWorkerItem> = (
     row,
     columnId,
@@ -42,10 +41,8 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
     return displayValue.toLowerCase().includes(filterValue.toLowerCase());
   };
 
-  // Column definition using TanStack column helper
   const columnHelper = createColumnHelper<ControlWorkerItem>();
 
-  // Define columns for the table
   const columns = useMemo(
     () => [
       columnHelper.accessor("personName", {
@@ -94,7 +91,6 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
     []
   );
 
-  // Handle data for the table
   const data = useMemo(() => {
     if (!controlWorkerData?.items) return [];
     return controlWorkerData.items;
@@ -125,7 +121,6 @@ const ControlWorkerTable: React.FC<ControlWorkerTableProps> = ({ cityId }) => {
   };
 
   const handlePageChange = (pageIndex: number, pageSize: number) => {
-    // Sayfalama bilgilerini güncelle
     setPagination({ pageIndex, pageSize });
   };
 

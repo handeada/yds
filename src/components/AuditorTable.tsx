@@ -88,7 +88,7 @@ const AuditorTable: React.FC<AuditorTableProps> = ({ cityId }) => {
         filterFn: statusFilterFn,
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const data = useMemo(() => {

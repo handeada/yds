@@ -22,7 +22,6 @@ const DistributionTable: React.FC<DistributionTableProps> = ({ cityId }) => {
     refetch,
   } = useGetDistributionListQuery(cityId || 0, { skip: !cityId });
 
-  // Veriyi daha uygun şekilde hazırla
   const distributionData = useMemo(() => {
     return distributionResponse || [];
   }, [distributionResponse]);

@@ -16,7 +16,6 @@ export const Department = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["CityStatistics"],
   endpoints: (builder) => ({
-    // YDK related endpoints
     getYdkList: builder.query<YdkResponse, YdkQueryParams>({
       query: (params) => ({
         url: "department/findAllYdkPublic",
@@ -41,7 +40,6 @@ export const Department = createApi({
       }),
     }),
 
-    // Laboratory related endpoints
     getLaboratoryList: builder.query<LaboratoryResponse, LaboratoryQueryParams>(
       {
         query: (params) => ({
@@ -73,7 +71,6 @@ export const Department = createApi({
       }
     ),
 
-    // City statistics endpoints
     getCityStatistics: builder.query<ProvinceStatistics[], number>({
       query: (plakaNo) => ({
         url: `/department/findAllPublicStatistics/${plakaNo}`,

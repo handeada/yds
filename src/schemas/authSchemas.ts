@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Login formu için Zod şeması
 export const loginSchema = z.object({
   username: z
     .string()
@@ -12,5 +11,4 @@ export const loginSchema = z.object({
     .max(100, { message: "Şifre 100 karakterden fazla olamaz" }),
 });
 
-// Şema tipi
 export type LoginFormData = z.infer<typeof loginSchema>;

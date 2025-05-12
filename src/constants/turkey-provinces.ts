@@ -1,6 +1,3 @@
-// Türkiye illeri için basitleştirilmiş GeoJSON verisi
-// Not: Bu basitleştirilmiş bir veridir, gerçek uygulamada daha detaylı GeoJSON kullanılmalıdır
-
 export const turkeyProvinces = {
   type: "FeatureCollection",
   features: [

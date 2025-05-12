@@ -7,7 +7,6 @@ import { getSelectedCity, selectCity } from "@/store/map";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-// MapLibre GL için GeoJSON tipini tanımla
 type GeoJSONFeature = {
   type: "Feature";
   properties: {
@@ -37,7 +36,6 @@ const TurkeyMap = () => {
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
 
-  // GeoJSON verilerini oluştur
   const createGeoJSONData = useCallback((): GeoJSONFeatureCollection => {
     return {
       type: "FeatureCollection",
@@ -56,7 +54,6 @@ const TurkeyMap = () => {
     };
   }, []);
 
-  // Şehir tıklama olayını işle
   const handleCityClick = useCallback(
     (
       e: maplibregl.MapMouseEvent & {
@@ -76,9 +73,7 @@ const TurkeyMap = () => {
     [dispatch]
   );
 
-  // Fare imlecini değiştirme ve popup gösterme/gizleme olayları
   const setupMouseInteractions = useCallback((mapInstance: maplibregl.Map) => {
-    // Popup oluştur
     popup.current = new maplibregl.Popup({
       closeButton: false,
       closeOnClick: false,
@@ -86,12 +81,9 @@ const TurkeyMap = () => {
       className: "map-city-popup",
     });
 
-    // Şehir üzerine gelindiğinde
     mapInstance.on("mouseenter", "cities-layer", (e) => {
-      // Mouse'un üzerinde olduğu özelliği al
       if (e.features && e.features.length > 0) {
         const feature = e.features[0];
-        // MapLibre GeoJSON özelliklerine uygun bir tip dönüşümü yapılıyor
         const pointGeometry = feature.geometry as {
           type: string;
           coordinates: number[];
@@ -102,7 +94,6 @@ const TurkeyMap = () => {
         ];
         const cityName = feature.properties.name;
 
-        // Popup'ı göster
         popup.current
           ?.setLngLat(coordinates)
           .setHTML(`<div class="city-popup">${cityName}</div>`)
@@ -110,25 +101,20 @@ const TurkeyMap = () => {
       }
     });
 
-    // Şehir üzerinden ayrıldığında
     mapInstance.on("mouseleave", "cities-layer", () => {
-      // Popup'ı kaldır
       popup.current?.remove();
     });
   }, []);
 
-  // Harita katmanlarını oluştur
   const setupMapLayers = useCallback(
     (mapInstance: maplibregl.Map) => {
       const geojsonData = createGeoJSONData();
 
-      // Veri kaynağını ekle
       mapInstance.addSource("cities", {
         type: "geojson",
         data: geojsonData,
       } as maplibregl.GeoJSONSourceSpecification);
 
-      // Şehir noktaları katmanı
       mapInstance.addLayer({
         id: "cities-layer",
         type: "circle",
@@ -141,16 +127,13 @@ const TurkeyMap = () => {
         },
       });
 
-      // Tıklama olayını ekle
       mapInstance.on("click", "cities-layer", handleCityClick);
 
-      // Fare etkileşimlerini ekle
       setupMouseInteractions(mapInstance);
     },
     [createGeoJSONData, handleCityClick, setupMouseInteractions]
   );
 
-  // Seçili şehri vurgula
   const highlightSelectedCity = useCallback(
     (mapInstance: maplibregl.Map, cityPlate: number | null) => {
       if (!mapInstance.isStyleLoaded()) return;
@@ -159,18 +142,16 @@ const TurkeyMap = () => {
         mapInstance.setPaintProperty("cities-layer", "circle-color", [
           "case",
           ["==", ["get", "plate"], cityPlate],
-          "#ff0000", // seçili şehir rengi
-          "#3887be", // normal renk
+          "#ff0000",
+          "#3887be",
         ]);
       } else {
-        // Pop-up kapandığında tüm şehirleri normal renge geri döndür
         mapInstance.setPaintProperty("cities-layer", "circle-color", "#3887be");
       }
     },
     []
   );
 
-  // Container boyutlarını izle
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -186,15 +167,11 @@ const TurkeyMap = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Haritayı başlat
   useEffect(() => {
-    // Harita zaten başlatılmışsa, tekrar başlatma
     if (map.current) return;
 
-    // Harita konteynerı yoksa, oluşturma
     if (!mapContainer.current) return;
 
-    // Haritayı oluştur
     const mapInstance = new maplibregl.Map({
       container: mapContainer.current,
       style: MAP_CONFIG.style as maplibregl.StyleSpecification,
@@ -202,34 +179,28 @@ const TurkeyMap = () => {
       zoom: MAP_CONFIG.zoom,
     });
 
-    // Harita referansını kaydet
     map.current = mapInstance;
 
-    // Harita yüklendiğinde katmanları ekle
     mapInstance.on("load", () => {
       setMapLoaded(true);
       setupMapLayers(mapInstance);
     });
 
-    // Temizleme fonksiyonu
     return () => {
       mapInstance.remove();
       map.current = null;
     };
   }, [setupMapLayers]);
 
-  // Seçili şehri vurgula - harita yüklendikten sonra çalışsın
   useEffect(() => {
     if (!mapLoaded || !map.current) return;
     highlightSelectedCity(map.current, selectedCityPlate);
   }, [selectedCityPlate, mapLoaded, highlightSelectedCity]);
 
-  // Container boyutu değişikliklerini işle
   useEffect(() => {
     if (containerWidth > 0 && containerHeight > 0 && map.current && mapLoaded) {
       map.current.resize();
 
-      // Ekran boyutuna göre zoom seviyesini ayarla
       const isMobile = containerWidth <= MAP_CONFIG.mobileBreakpoint;
       const newZoom = isMobile ? MAP_CONFIG.mobileZoom : MAP_CONFIG.zoom;
 

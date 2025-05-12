@@ -34,7 +34,6 @@ export default function AuthLayout({ children, requireAuth }: AuthLayoutProps) {
     );
   }
 
-  // Use MainLayout for authenticated pages, otherwise just render children
   if (requireAuth && isAuthenticated) {
     return <MainLayout>{children}</MainLayout>;
   }

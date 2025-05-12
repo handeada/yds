@@ -1,8 +1,8 @@
 export const MAP_CONFIG = {
-  center: [35.5, 38.7] as [number, number], // Türkiye'nin merkezi
+  center: [35.5, 38.7] as [number, number],
   zoom: 5.2,
   mobileZoom: 4.5,
-  mobileBreakpoint: 640, // Mobil görünüm için genişlik eşiği
+  mobileBreakpoint: 640,
   style: {
     version: 8,
     sources: {

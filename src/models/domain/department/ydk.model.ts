@@ -21,7 +21,7 @@ export interface YdkItem {
   fileNumber: string;
   name: string;
   address: string;
-  phone?: string; // Optional phone field
+  phone?: string;
 }
 
 export interface YdkResponse {
