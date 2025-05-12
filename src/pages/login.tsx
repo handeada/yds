@@ -38,8 +38,8 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-6 md:p-8 bg-white rounded-md shadow-md mx-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4 py-8">
+      <div className="w-full max-w-md bg-white rounded-md shadow-md p-6 md:p-8">
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
           Giriş Yap
         </h1>

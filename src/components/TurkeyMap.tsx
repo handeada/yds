@@ -67,44 +67,54 @@ const TurkeyMap = () => {
 
         if (props && props.plate) {
           dispatch(selectCity({ plate: props.plate, name: props.name }));
+          popup.current?.remove();
         }
       }
     },
     [dispatch]
   );
 
-  const setupMouseInteractions = useCallback((mapInstance: maplibregl.Map) => {
-    popup.current = new maplibregl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 10,
-      className: "map-city-popup",
-    });
+  const setupMouseInteractions = useCallback(
+    (mapInstance: maplibregl.Map) => {
+      popup.current = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 10,
+        className: "map-city-popup",
+      });
 
-    mapInstance.on("mouseenter", "cities-layer", (e) => {
-      if (e.features && e.features.length > 0) {
-        const feature = e.features[0];
-        const pointGeometry = feature.geometry as {
-          type: string;
-          coordinates: number[];
-        };
-        const coordinates = pointGeometry.coordinates.slice() as [
-          number,
-          number
-        ];
-        const cityName = feature.properties.name;
+      mapInstance.on("mouseenter", "cities-layer", (e) => {
+        if (e.features && e.features.length > 0) {
+          const feature = e.features[0];
+          const plateNumber = feature.properties.plate;
 
-        popup.current
-          ?.setLngLat(coordinates)
-          .setHTML(`<div class="city-popup">${cityName}</div>`)
-          .addTo(mapInstance);
-      }
-    });
+          if (selectedCityPlate === plateNumber) {
+            return;
+          }
 
-    mapInstance.on("mouseleave", "cities-layer", () => {
-      popup.current?.remove();
-    });
-  }, []);
+          const pointGeometry = feature.geometry as {
+            type: string;
+            coordinates: number[];
+          };
+          const coordinates = pointGeometry.coordinates.slice() as [
+            number,
+            number
+          ];
+          const cityName = feature.properties.name;
+
+          popup.current
+            ?.setLngLat(coordinates)
+            .setHTML(`<div class="city-popup">${cityName}</div>`)
+            .addTo(mapInstance);
+        }
+      });
+
+      mapInstance.on("mouseleave", "cities-layer", () => {
+        popup.current?.remove();
+      });
+    },
+    [selectedCityPlate]
+  );
 
   const setupMapLayers = useCallback(
     (mapInstance: maplibregl.Map) => {
